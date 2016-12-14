@@ -129,6 +129,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Data\DrugBotDataContext.cs" />
+    <Compile Include="Dialogs\BuyDialog.cs" />
     <Compile Include="Dialogs\GameDialog.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -136,6 +137,14 @@
     <Compile Include="Migrations\201612130649151_InitialCreate.cs" />
     <Compile Include="Migrations\201612130649151_InitialCreate.Designer.cs">
       <DependentUpon>201612130649151_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612140603569_add-location.cs" />
+    <Compile Include="Migrations\201612140603569_add-location.Designer.cs">
+      <DependentUpon>201612140603569_add-location.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612140605296_fk-user-to-location.cs" />
+    <Compile Include="Migrations\201612140605296_fk-user-to-location.Designer.cs">
+      <DependentUpon>201612140605296_fk-user-to-location.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -152,6 +161,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201612130649151_InitialCreate.resx">
       <DependentUpon>201612130649151_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612140603569_add-location.resx">
+      <DependentUpon>201612140603569_add-location.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612140605296_fk-user-to-location.resx">
+      <DependentUpon>201612140605296_fk-user-to-location.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

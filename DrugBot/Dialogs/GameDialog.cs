@@ -12,6 +12,9 @@ namespace DrugBot.Dialogs
     [Serializable]
     public class GameDialog : IDialog<object>
     {
+        string BotUserId;
+        string Name;
+
         public async Task StartAsync(IDialogContext context)
         {
             context.Wait(MessageReceivedAsync);
@@ -23,15 +26,63 @@ namespace DrugBot.Dialogs
 
             if (message.Text.ToLower() == "play")
             {
-                await context.PostAsync("yeah, i'm published since deployment");
+                BotUserId = message.Conversation.Id;
+
+                // create user
+                var db = new DrugBotDataContext();
+                var user = db.Users.FirstOrDefault(x => x.BotUserId == message.From.Id);
+
+                if(user == null)
+                {
+                    // first time playing, create user, prompt for name...
+                    PromptDialog.Text(context, SetupNameAsync, "What's your name?", "retry...");
+                }
+                else
+                {
+                    // todo: greet user
+                    await context.PostAsync("I know you...");
+                    context.Wait(MessageReceivedAsync);
+                }
             }
             else
             {
-                // mirror the text
-                await context.PostAsync($"You said: {message.Text}. Say \"Hi\" to start the conversation.");
+                // tell them to trigger the game start
+                await context.PostAsync("You should probably type \"PLAY\" to start the game...");
+                context.Wait(MessageReceivedAsync);
             }
+        }
 
-            context.Wait(MessageReceivedAsync);
+        public virtual async Task SetupNameAsync(IDialogContext context, IAwaitable<string> result)
+        {
+            Name = await result;
+
+            var user = new User
+            {
+                BotUserId = BotUserId,
+                Name = Name,
+                Wallet = 1000m,
+            };
+
+            var db = new DrugBotDataContext();
+            db.Users.Add(user);
+            db.SaveChanges();
+
+            context.UserData.SetValue<int>("UserId", user.UserId);
+
+            await context.PostAsync($"Thanks {Name}...let's make some money!");
+
+            // start in washington, dc
+            context.UserData.SetValue<int>("LocationId", 1);
+
+            // go buy drugs
+            context.Call(new BuyDialog(), BackToSetupNameAsync);
+        }
+
+        // callback from setup name soooo, as we're popping this off stack
+        private async Task BackToSetupNameAsync(IDialogContext context, IAwaitable<object> result)
+        {
+            var message = await result;
+            context.Done<object>(message);
         }
     }
 }
