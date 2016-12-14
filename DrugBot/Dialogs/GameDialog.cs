@@ -23,6 +23,7 @@ namespace DrugBot.Dialogs
 
             if (message.Text.ToLower() == "play")
             {
+                await context.PostAsync("yeah, i'm published");
             }
             else
             {
