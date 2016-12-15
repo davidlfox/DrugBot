@@ -26,24 +26,34 @@ namespace DrugBot.Dialogs
             var db = new DrugBotDataContext();
             var drugs = db.Drugs.ToList();
 
-            // todo: check state data for existing drug prices and dont overwrite these location prices
-
+            // check state data for existing drug prices and dont overwrite these location prices
             var drugPrices = new Dictionary<string, int>();
 
-            var rand = new Random();
-            var multiplier = 1;
-
-            List<CardAction> buttons = new List<CardAction>();
-
-            foreach (var drug in drugs)
+            if (!context.UserData.TryGetValue("drugPrices", out drugPrices))
             {
-                var price = rand.Next(5, 20) * multiplier;
-                drugPrices.Add(drug.Name.ToLower(), price);
+                drugPrices = new Dictionary<string, int>();
+
+                var rand = new Random();
+
+                foreach (var drug in drugs)
+                {
+                    var price = rand.Next(drug.MinPrice, drug.MaxPrice);
+                    drugPrices.Add(drug.Name, price);
+                }
+
+                // store to state
+                context.UserData.SetValue("drugPrices", drugPrices);
+            }
+
+            // setup buttons
+            var buttons = new List<CardAction>();
+            foreach(var drug in drugPrices)
+            {
                 buttons.Add(new CardAction
                 {
-                    Title = $"{drug.Name}: {price:C0}",
+                    Title = $"{drug.Key}: {drug.Value:C0}",
                     Type = ActionTypes.ImBack,
-                    Value = drug.Name,
+                    Value = drug.Key,
                 });
             }
 
@@ -71,9 +81,6 @@ namespace DrugBot.Dialogs
 
             await context.PostAsync(activity);
 
-            // store to state
-            context.UserData.SetValue("drugPrices", drugPrices);
-
             // wait for drug selection
             context.Wait(MessageReceivedAsync);
         }
@@ -90,11 +97,13 @@ namespace DrugBot.Dialogs
             {
                 var drugPrices = context.UserData.Get< Dictionary<string, int>>("drugPrices");
 
-                if (drugPrices.ContainsKey(message.Text.ToLower()))
+                if (drugPrices.ContainsKey(message.Text) || drugPrices.ContainsKey(message.Text.ToLower()))
                 {
                     // send intended drug to state
-                    // todo: confirm db record matches, so we store a good drug name to bot state
-                    context.UserData.SetValue("DrugToBuy", message.Text);
+                    // confirm db record matches, so we store a good drug name to bot state
+                    var db = new DrugBotDataContext();
+                    var drug = db.Drugs.Single(x => x.Name == message.Text);
+                    context.UserData.SetValue("DrugToBuy", drug.Name);
 
                     // prompt for quantity
                     PromptDialog.Number(context, BuyQuantityAsync, "How much do you want to buy?");
@@ -133,7 +142,7 @@ namespace DrugBot.Dialogs
                     var drugPrices = context.UserData.Get<Dictionary<string, int>>("drugPrices");
                     var drugToBuy = context.UserData.Get<string>("DrugToBuy");
                     var drug = db.Drugs.Single(x => x.Name == drugToBuy);
-                    var price = drugPrices[drugToBuy.ToLower()];
+                    var price = drugPrices[drugToBuy];
 
                     // check wallet for enough money
                     if (user.Wallet >= price * qty)
