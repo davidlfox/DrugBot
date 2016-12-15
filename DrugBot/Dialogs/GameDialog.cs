@@ -74,8 +74,8 @@ namespace DrugBot.Dialogs
             // start in washington, dc
             context.UserData.SetValue<int>("LocationId", 1);
 
-            // go buy drugs
-            context.Call(new BuyDialog(), BackToSetupNameAsync);
+            // go to main menu
+            context.Call(new MainMenuDialog(), BackToSetupNameAsync);
         }
 
         // callback from setup name soooo, as we're popping this off stack

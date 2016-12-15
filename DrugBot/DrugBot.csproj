@@ -131,6 +131,9 @@
     <Compile Include="Data\DrugBotDataContext.cs" />
     <Compile Include="Dialogs\BuyDialog.cs" />
     <Compile Include="Dialogs\GameDialog.cs" />
+    <Compile Include="Dialogs\MainMenuDialog.cs" />
+    <Compile Include="Dialogs\SellDialog.cs" />
+    <Compile Include="Dialogs\TravelDialog.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
