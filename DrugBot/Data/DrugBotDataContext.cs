@@ -35,11 +35,16 @@ namespace DrugBot.Data
         /// <summary>
         /// Money available
         /// </summary>
-        public decimal Wallet { get; set; }
+        public int Wallet { get; set; }
 
         [ForeignKey("Location")]
         public int? LocationId { get; set; }
         public virtual Location Location { get; set; }
+
+        /// <summary>
+        /// drugs on hand
+        /// </summary>
+        public virtual ICollection<InventoryItem> Inventory { get; set; }
     }
 
     public class Drug
@@ -58,6 +63,17 @@ namespace DrugBot.Data
         /// Guess we'll use this at some point
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Minimum randomly generated price
+        /// </summary>
+        public int MinPrice { get; set; }
+
+        /// <summary>
+        /// Maximum randomly generated price
+        /// </summary>
+        public int MaxPrice { get; set; }
+
     }
 
     public class Game
@@ -87,5 +103,19 @@ namespace DrugBot.Data
         public int LocationId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+    }
+
+    public class InventoryItem
+    {
+        public int InventoryItemId { get; set; }
+
+        [ForeignKey("Drug")]
+        public int DrugId { get; set; }
+        public virtual Drug Drug { get; set; }
+
+        [ForeignKey("User")]
+        public int UserId { get; set; }
+        public virtual User User { get; set; }
+
     }
 }

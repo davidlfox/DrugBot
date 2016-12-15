@@ -113,9 +113,14 @@ namespace DrugBot.Dialogs
                 // check wallet for enough money
                 if (user.Wallet >= price * qty)
                 {
+                    var cost = price * Convert.ToInt32(qty);
+
                     // do transaction
-                    user.Wallet -= price * qty;
-                    // todo: add inventory (like, logically and to the data model because there's no concept of it now)
+                    user.Wallet -= cost;
+                    await context.PostAsync($"You spent {cost:C0} on {qty} units of {drugToBuy}");
+                    // todo: add inventory 
+
+                    context.Done<object>(null);
                 }
                 else
                 {

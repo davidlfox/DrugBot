@@ -60,7 +60,7 @@ namespace DrugBot.Dialogs
             {
                 BotUserId = BotUserId,
                 Name = Name,
-                Wallet = 1000m,
+                Wallet = 1000,
             };
 
             var db = new DrugBotDataContext();
