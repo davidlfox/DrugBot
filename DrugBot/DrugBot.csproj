@@ -150,6 +150,10 @@
     <Compile Include="Migrations\201612150340103_inventory-and-schema-tweaks.Designer.cs">
       <DependentUpon>201612150340103_inventory-and-schema-tweaks.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612150457340_inventory-quantity.cs" />
+    <Compile Include="Migrations\201612150457340_inventory-quantity.Designer.cs">
+      <DependentUpon>201612150457340_inventory-quantity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -174,6 +178,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612150340103_inventory-and-schema-tweaks.resx">
       <DependentUpon>201612150340103_inventory-and-schema-tweaks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612150457340_inventory-quantity.resx">
+      <DependentUpon>201612150457340_inventory-quantity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

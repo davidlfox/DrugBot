@@ -109,6 +109,8 @@ namespace DrugBot.Data
     {
         public int InventoryItemId { get; set; }
 
+        public int Quantity { get; set; }
+
         [ForeignKey("Drug")]
         public int DrugId { get; set; }
         public virtual Drug Drug { get; set; }
