@@ -30,7 +30,7 @@ namespace DrugBot.Dialogs
                 BotUserId = message.Conversation.Id;
 
                 var db = new DrugBotDataContext();
-                var user = db.FindUser(message.From.Id);
+                var user = db.FindUser(message.Conversation.Id);
 
                 if(user == null)
                 {
@@ -41,7 +41,7 @@ namespace DrugBot.Dialogs
                 {
                     // todo: greet user
                     await context.PostAsync("I know you...");
-                    context.Wait(MessageReceivedAsync);
+                    context.Call(new MainMenuDialog(), BackToSetupNameAsync);
                 }
             }
             else
