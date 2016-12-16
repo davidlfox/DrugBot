@@ -6,11 +6,12 @@ using System.Web;
 using System.Threading.Tasks;
 using DrugBot.Data;
 using Microsoft.Bot.Connector;
+using DrugBot.Common;
 
 namespace DrugBot.Dialogs
 {
     [Serializable]
-    public class BuyDialog : IDialog<object>
+    public class BuyDialog : BaseDialog, IDialog<object>
     {
         public async Task StartAsync(IDialogContext context)
         {
@@ -23,13 +24,12 @@ namespace DrugBot.Dialogs
             }
 
             // get drugs/random prices
-            var db = new DrugBotDataContext();
-            var drugs = db.Drugs.ToList();
+            var drugs = this.GetDrugs().ToList();
 
             // check state data for existing drug prices and dont overwrite these location prices
             var drugPrices = new Dictionary<string, int>();
 
-            if (!context.UserData.TryGetValue("drugPrices", out drugPrices))
+            if (!context.UserData.TryGetValue(StateKeys.DrugPrices, out drugPrices))
             {
                 drugPrices = new Dictionary<string, int>();
 
@@ -42,7 +42,7 @@ namespace DrugBot.Dialogs
                 }
 
                 // store to state
-                context.UserData.SetValue("drugPrices", drugPrices);
+                context.UserData.SetValue(StateKeys.DrugPrices, drugPrices);
             }
 
             // setup buttons
@@ -95,7 +95,7 @@ namespace DrugBot.Dialogs
             }
             else
             {
-                var drugPrices = context.UserData.Get< Dictionary<string, int>>("drugPrices");
+                var drugPrices = context.UserData.Get< Dictionary<string, int>>(StateKeys.DrugPrices);
 
                 if (drugPrices.ContainsKey(message.Text) || drugPrices.ContainsKey(message.Text.ToLower()))
                 {
@@ -103,7 +103,7 @@ namespace DrugBot.Dialogs
                     // confirm db record matches, so we store a good drug name to bot state
                     var db = new DrugBotDataContext();
                     var drug = db.Drugs.Single(x => x.Name == message.Text);
-                    context.UserData.SetValue("DrugToBuy", drug.Name);
+                    context.UserData.SetValue(StateKeys.DrugToBuy, drug.Name);
 
                     // prompt for quantity
                     PromptDialog.Number(context, BuyQuantityAsync, "How much do you want to buy?");
@@ -130,7 +130,7 @@ namespace DrugBot.Dialogs
                 var quantity = Convert.ToInt32(qty);
 
                 // todo: make enum or static key names
-                var userId = context.UserData.Get<int>("UserId");
+                var userId = context.UserData.Get<int>(StateKeys.UserId);
 
                 // todo: put this somewhere common
                 var db = new DrugBotDataContext();
@@ -139,8 +139,8 @@ namespace DrugBot.Dialogs
                 if(user != null)
                 {
                     // determine drug price
-                    var drugPrices = context.UserData.Get<Dictionary<string, int>>("drugPrices");
-                    var drugToBuy = context.UserData.Get<string>("DrugToBuy");
+                    var drugPrices = context.UserData.Get<Dictionary<string, int>>(StateKeys.DrugPrices);
+                    var drugToBuy = context.UserData.Get<string>(StateKeys.DrugToBuy);
                     var drug = db.Drugs.Single(x => x.Name == drugToBuy);
                     var price = drugPrices[drugToBuy];
 

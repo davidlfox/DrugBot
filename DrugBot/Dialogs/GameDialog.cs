@@ -6,11 +6,12 @@ using System.Web;
 using System.Threading.Tasks;
 using Microsoft.Bot.Connector;
 using DrugBot.Data;
+using DrugBot.Common;
 
 namespace DrugBot.Dialogs
 {
     [Serializable]
-    public class GameDialog : IDialog<object>
+    public class GameDialog : BaseDialog, IDialog<object>
     {
         string BotUserId;
         string Name;
@@ -28,9 +29,7 @@ namespace DrugBot.Dialogs
             {
                 BotUserId = message.Conversation.Id;
 
-                // create user
-                var db = new DrugBotDataContext();
-                var user = db.Users.FirstOrDefault(x => x.BotUserId == message.From.Id);
+                var user = this.FindUser(message.From.Id);
 
                 if(user == null)
                 {
@@ -56,23 +55,15 @@ namespace DrugBot.Dialogs
         {
             Name = await result;
 
-            var user = new User
-            {
-                BotUserId = BotUserId,
-                Name = Name,
-                Wallet = 1000,
-            };
+            var user = this.AddUser(BotUserId, Name, 1000);
+            this.Commit();
 
-            var db = new DrugBotDataContext();
-            db.Users.Add(user);
-            db.SaveChanges();
-
-            context.UserData.SetValue<int>("UserId", user.UserId);
+            context.UserData.SetValue<int>(StateKeys.UserId, user.UserId);
 
             await context.PostAsync($"Thanks {Name}...let's make some money!");
 
             // start in washington, dc
-            context.UserData.SetValue<int>("LocationId", 1);
+            context.UserData.SetValue<int>(StateKeys.LocationId, 1);
 
             // go to main menu
             context.Call(new MainMenuDialog(), BackToSetupNameAsync);
