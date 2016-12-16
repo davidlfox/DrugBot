@@ -13,6 +13,46 @@ namespace DrugBot.Data
         public DbSet<Drug> Drugs { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<Location> Locations { get; set; }
+
+        public int Commit()
+        {
+            return this.SaveChanges();
+        }
+
+        public User FindUser(string botUserId)
+        {
+            return this.Users.FirstOrDefault(x => x.BotUserId == botUserId);
+        }
+
+        public User AddUser(User user)
+        {
+            this.Users.Add(user);
+            return user;
+        }
+
+        public User AddUser(string botUserID, string name, int wallet)
+        {
+            var user = new User
+            {
+                BotUserId = botUserID,
+                Name = name,
+                Wallet = wallet,
+            };
+
+            this.AddUser(user);
+
+            return user;
+        }
+
+        public Drug FindDrug(string name)
+        {
+            return this.Drugs.FirstOrDefault(x => x.Name == name);
+        }
+
+        public IQueryable<Drug> GetDrugs()
+        {
+            return this.Drugs;
+        }
     }
 
     public class User

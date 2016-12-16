@@ -11,7 +11,7 @@ using DrugBot.Common;
 namespace DrugBot.Dialogs
 {
     [Serializable]
-    public class GameDialog : BaseDialog, IDialog<object>
+    public class GameDialog : IDialog<object>
     {
         string BotUserId;
         string Name;
@@ -29,7 +29,8 @@ namespace DrugBot.Dialogs
             {
                 BotUserId = message.Conversation.Id;
 
-                var user = this.FindUser(message.From.Id);
+                var db = new DrugBotDataContext();
+                var user = db.FindUser(message.From.Id);
 
                 if(user == null)
                 {
@@ -55,8 +56,9 @@ namespace DrugBot.Dialogs
         {
             Name = await result;
 
-            var user = this.AddUser(BotUserId, Name, 1000);
-            this.Commit();
+            var db = new DrugBotDataContext();
+            var user = db.AddUser(BotUserId, Name, 1000);
+            db.Commit();
 
             context.UserData.SetValue<int>(StateKeys.UserId, user.UserId);
 

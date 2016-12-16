@@ -11,7 +11,7 @@ using DrugBot.Common;
 namespace DrugBot.Dialogs
 {
     [Serializable]
-    public class BuyDialog : BaseDialog, IDialog<object>
+    public class BuyDialog : IDialog<object>
     {
         public async Task StartAsync(IDialogContext context)
         {
@@ -24,7 +24,8 @@ namespace DrugBot.Dialogs
             }
 
             // get drugs/random prices
-            var drugs = this.GetDrugs().ToList();
+            var db = new DrugBotDataContext();
+            var drugs = db.GetDrugs().ToList();
 
             // check state data for existing drug prices and dont overwrite these location prices
             var drugPrices = new Dictionary<string, int>();
