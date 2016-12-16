@@ -16,7 +16,7 @@ namespace DrugBot.Dialogs
         public async Task StartAsync(IDialogContext context)
         {
             // get location of user--how? we dont have user id. bot state?
-            var locationId = context.UserData.Get<int>("LocationId");
+            var locationId = context.UserData.Get<int>(StateKeys.LocationId);
 
             if (locationId == 0)
             {
