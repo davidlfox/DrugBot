@@ -69,6 +69,10 @@ namespace DrugBot.Dialogs
                 case "sell":
                     context.Call(new SellDialog(), ResumeMainMenu);
                     break;
+                case "prices":
+                    // todo: display current prices
+                    throw new NotImplementedException();
+                    break;
                 default:
                     await context.PostAsync("I don't understand that. You should probably type TRAVEL, or BUY, or SELL to continue...");
                     context.Wait(MessageReceivedAsync);
