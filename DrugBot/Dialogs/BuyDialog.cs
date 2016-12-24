@@ -27,19 +27,19 @@ namespace DrugBot.Dialogs
             var db = new DrugBotDataContext();
             var drugs = db.GetDrugs().ToList();
 
-            // check state data for existing drug prices and dont overwrite these location prices
-            var drugPrices = new Dictionary<string, int>();
+            // check state data for existing drug prices and dont overwrite these location's prices
+            var drugPrices = new Dictionary<int, int>();
 
             if (!context.UserData.TryGetValue(StateKeys.DrugPrices, out drugPrices))
             {
-                drugPrices = new Dictionary<string, int>();
+                drugPrices = new Dictionary<int, int>();
 
                 var rand = new Random();
 
                 foreach (var drug in drugs)
                 {
                     var price = rand.Next(drug.MinPrice, drug.MaxPrice);
-                    drugPrices.Add(drug.Name, price);
+                    drugPrices.Add(drug.DrugId, price);
                 }
 
                 // store to state
@@ -48,13 +48,15 @@ namespace DrugBot.Dialogs
 
             // setup buttons
             var buttons = new List<CardAction>();
-            foreach(var drug in drugPrices)
+            foreach(var drugPrice in drugPrices)
             {
+                var drug = drugs.Single(x => x.DrugId == drugPrice.Key);
+
                 buttons.Add(new CardAction
                 {
-                    Title = $"{drug.Key}: {drug.Value:C0}",
+                    Title = $"{drug.Name}: {drugPrice.Value:C0}",
                     Type = ActionTypes.ImBack,
-                    Value = drug.Key,
+                    Value = drug.Name,
                 });
             }
 
@@ -96,14 +98,20 @@ namespace DrugBot.Dialogs
             }
             else
             {
-                var drugPrices = context.UserData.Get< Dictionary<string, int>>(StateKeys.DrugPrices);
+                var db = new DrugBotDataContext();
+                var drugs = db.GetDrugs().ToList()
+                    .Select(x => new
+                    {
+                        Name = x.Name.ToLower(),
+                    });
 
-                if (drugPrices.ContainsKey(message.Text) || drugPrices.ContainsKey(message.Text.ToLower()))
+                var drugPrices = context.UserData.Get<Dictionary<int, int>>(StateKeys.DrugPrices);
+
+                if (drugs.Any(x => x.Name == message.Text.ToLower()))
                 {
                     // send intended drug to state
                     // confirm db record matches, so we store a good drug name to bot state
-                    var db = new DrugBotDataContext();
-                    var drug = db.Drugs.Single(x => x.Name == message.Text);
+                    var drug = drugs.Single(x => x.Name == message.Text.ToLower());
                     context.UserData.SetValue(StateKeys.DrugToBuy, drug.Name);
 
                     // prompt for quantity
@@ -130,20 +138,27 @@ namespace DrugBot.Dialogs
             {
                 var quantity = Convert.ToInt32(qty);
 
-                // todo: make enum or static key names
                 var userId = context.UserData.Get<int>(StateKeys.UserId);
 
                 // todo: put this somewhere common
                 var db = new DrugBotDataContext();
+                var drugs = db.GetDrugs().ToList()
+                    .Select(x => new
+                    {
+                        Name = x.Name,
+                        NameLower = x.Name.ToLower(),
+                        DrugId = x.DrugId,
+                    });
+
                 var user = db.Users.FirstOrDefault(x => x.UserId == userId);
 
                 if(user != null)
                 {
                     // determine drug price
-                    var drugPrices = context.UserData.Get<Dictionary<string, int>>(StateKeys.DrugPrices);
+                    var drugPrices = context.UserData.Get<Dictionary<int, int>>(StateKeys.DrugPrices);
                     var drugToBuy = context.UserData.Get<string>(StateKeys.DrugToBuy);
-                    var drug = db.Drugs.Single(x => x.Name == drugToBuy);
-                    var price = drugPrices[drugToBuy];
+                    var drug = drugs.Single(x => x.NameLower == drugToBuy);
+                    var price = drugPrices[drug.DrugId];
 
                     // check wallet for enough money
                     if (user.Wallet >= price * qty)
@@ -168,7 +183,7 @@ namespace DrugBot.Dialogs
                             var inventory = new InventoryItem
                             {
                                 User = user,
-                                Drug = drug,
+                                DrugId = drug.DrugId,
                                 Quantity = quantity,
                             };
                             user.Inventory.Add(inventory);
