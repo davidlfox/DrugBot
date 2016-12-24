@@ -11,7 +11,7 @@ using DrugBot.Common;
 namespace DrugBot.Dialogs
 {
     [Serializable]
-    public class BuyDialog : IDialog<object>
+    public class BuyDialog : BaseDialog, IDialog<object>
     {
         public async Task StartAsync(IDialogContext context)
         {
@@ -20,23 +20,7 @@ namespace DrugBot.Dialogs
             var drugs = db.GetDrugs().ToList();
 
             // check state data for existing drug prices and dont overwrite these location's prices
-            var drugPrices = new Dictionary<int, int>();
-
-            if (!context.UserData.TryGetValue(StateKeys.DrugPrices, out drugPrices))
-            {
-                drugPrices = new Dictionary<int, int>();
-
-                var rand = new Random();
-
-                foreach (var drug in drugs)
-                {
-                    var price = rand.Next(drug.MinPrice, drug.MaxPrice);
-                    drugPrices.Add(drug.DrugId, price);
-                }
-
-                // store to state
-                context.UserData.SetValue(StateKeys.DrugPrices, drugPrices);
-            }
+            var drugPrices = this.GetDrugPrices(context);
 
             // setup buttons
             var buttons = new List<CardAction>();
@@ -97,8 +81,6 @@ namespace DrugBot.Dialogs
                         Name = x.Name.ToLower(),
                     });
 
-                var drugPrices = context.UserData.Get<Dictionary<int, int>>(StateKeys.DrugPrices);
-
                 if (drugs.Any(x => x.Name == message.Text.ToLower()))
                 {
                     // send intended drug to state
@@ -147,7 +129,7 @@ namespace DrugBot.Dialogs
                 if(user != null)
                 {
                     // determine drug price
-                    var drugPrices = context.UserData.Get<Dictionary<int, int>>(StateKeys.DrugPrices);
+                    var drugPrices = this.GetDrugPrices(context);
                     var drugToBuy = context.UserData.Get<string>(StateKeys.DrugToBuy);
                     var drug = drugs.Single(x => x.NameLower == drugToBuy);
                     var price = drugPrices[drug.DrugId];
