@@ -15,14 +15,6 @@ namespace DrugBot.Dialogs
     {
         public async Task StartAsync(IDialogContext context)
         {
-            // get location of user--how? we dont have user id. bot state?
-            var locationId = context.UserData.Get<int>(StateKeys.LocationId);
-
-            if (locationId == 0)
-            {
-                throw new NotImplementedException();
-            }
-
             // get drugs/random prices
             var db = new DrugBotDataContext();
             var drugs = db.GetDrugs().ToList();
