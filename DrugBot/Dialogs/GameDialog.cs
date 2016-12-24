@@ -32,7 +32,10 @@ namespace DrugBot.Dialogs
                 var db = new DrugBotDataContext();
                 var user = db.FindUser(message.Conversation.Id);
 
-                if(user == null)
+                // start in washington, dc
+                context.UserData.SetValue<int>(StateKeys.LocationId, 1);
+
+                if (user == null)
                 {
                     // first time playing, create user, prompt for name...
                     PromptDialog.Text(context, SetupNameAsync, "What's your name?", "retry...");
@@ -41,6 +44,7 @@ namespace DrugBot.Dialogs
                 {
                     // todo: greet user
                     await context.PostAsync("I know you...");
+                    context.UserData.SetValue<int>(StateKeys.UserId, user.UserId);
                     context.Call(new MainMenuDialog(), BackToSetupNameAsync);
                 }
             }
