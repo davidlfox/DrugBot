@@ -36,12 +36,7 @@ namespace DrugBot.Dialogs
                 });
             }
 
-            buttons.Add(new CardAction
-            {
-                Title = "Cancel",
-                Type = ActionTypes.ImBack,
-                Value = "Cancel",
-            });
+            this.AddCancelButton(buttons);
 
             // setup hero card
             HeroCard heroCard = new HeroCard

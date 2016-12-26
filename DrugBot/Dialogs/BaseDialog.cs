@@ -1,6 +1,7 @@
 ﻿using DrugBot.Common;
 using DrugBot.Data;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Connector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,16 @@ namespace DrugBot.Dialogs
             }
 
             return drugPrices;
+        }
+
+        protected void AddCancelButton(ICollection<CardAction> buttons)
+        {
+            buttons.Add(new CardAction
+            {
+                Title = "Cancel",
+                Type = ActionTypes.ImBack,
+                Value = "Cancel",
+            });
         }
     }
 }
