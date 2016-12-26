@@ -13,6 +13,7 @@ namespace DrugBot.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Drug> Drugs { get; set; }
         public DbSet<Location> Locations { get; set; }
+        public DbSet<InventoryItem> InventoryItems { get; set; }
 
         public int Commit()
         {
