@@ -9,12 +9,27 @@ using Microsoft.Bot.Connector;
 namespace DrugBot.Dialogs
 {
     [Serializable]
-    public class TravelDialog : IDialog<object>
+    public class TravelDialog : BaseDialog, IDialog<object>
     {
         public async Task StartAsync(IDialogContext context)
         {
-            await context.PostAsync("Starting and ending travel dialog...");
-            context.Done<object>(null);
+            var locations = this.GetLocations();
+
+            var buttons = new List<CardAction>();
+            foreach(var loc in locations)
+            {
+                buttons.Add(new CardAction
+                {
+                    Title = loc.Name,
+                    Type = ActionTypes.ImBack,
+                    Value = loc.Name,
+                });
+            }
+
+            this.AddCancelButton(buttons);
+
+            await context.PostAsync(this.SetupHeroResponse(context, buttons, "Where do you wanna go? It's gonna cost you a day!"));
+            context.Wait(MessageReceivedAsync);
         }
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)

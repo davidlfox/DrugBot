@@ -58,6 +58,12 @@ namespace DrugBot.Dialogs
             return drugPrices;
         }
 
+        protected IQueryable<Location> GetLocations()
+        {
+            var db = new DrugBotDataContext();
+            return db.Locations;
+        }
+
         protected void AddCancelButton(ICollection<CardAction> buttons)
         {
             buttons.Add(new CardAction
