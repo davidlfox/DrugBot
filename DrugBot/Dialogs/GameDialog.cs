@@ -11,7 +11,7 @@ using DrugBot.Common;
 namespace DrugBot.Dialogs
 {
     [Serializable]
-    public class GameDialog : IDialog<object>
+    public class GameDialog : BaseDialog, IDialog<GameState>
     {
         string BotUserId;
         string Name;
@@ -77,10 +77,10 @@ namespace DrugBot.Dialogs
         }
 
         // callback from setup name soooo, as we're popping this off stack
-        private async Task BackToSetupNameAsync(IDialogContext context, IAwaitable<object> result)
+        private async Task BackToSetupNameAsync(IDialogContext context, IAwaitable<GameState> result)
         {
             var message = await result;
-            context.Done<object>(message);
+            context.Done(message);
         }
     }
 }

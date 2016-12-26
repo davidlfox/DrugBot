@@ -10,7 +10,7 @@ using DrugBot.Common;
 namespace DrugBot.Dialogs
 {
     [Serializable]
-    public class MainMenuDialog : BaseDialog, IDialog<object>
+    public class MainMenuDialog : BaseDialog, IDialog<GameState>
     {
         /// <summary>
         /// Print menu to navigate between traveling, buying, selling, etc
@@ -89,7 +89,8 @@ namespace DrugBot.Dialogs
             {
                 var money = this.ResetUser(context);
                 await context.PostAsync("Game Over.");
-                await context.PostAsync($"You finished with {money:0C}.");
+                await context.PostAsync($"You finished with {money:C0}.");
+                this.Done(context);
             }
             else if (state.IsTraveling)
             {

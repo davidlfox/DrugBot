@@ -64,6 +64,8 @@ namespace DrugBot.Dialogs
                     }
                     else
                     {
+                        this.GetDrugPrices(context, true);
+
                         await context.PostAsync($"Off to {dst.Name}!");
                         this.Done(context, new GameState { IsTraveling = true });
                     }

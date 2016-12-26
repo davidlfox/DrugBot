@@ -107,10 +107,10 @@ namespace DrugBot.Dialogs
             {
                 // yeah, i know this could truncate
                 var quantity = Convert.ToInt32(qty);
-
-                var user = this.GetUser(context);
-
                 var db = new DrugBotDataContext();
+
+                var userId = context.UserData.Get<int>(StateKeys.UserId);
+                var user = db.Users.Single(x => x.UserId == userId);
 
                 var drugs = db.GetDrugs().ToList()
                     .Select(x => new

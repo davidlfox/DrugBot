@@ -49,14 +49,14 @@ namespace DrugBot.Dialogs
             return db.Users.FirstOrDefault(x => x.UserId == userId);
         }
 
-        protected Dictionary<int, int> GetDrugPrices(IDialogContext context)
+        protected Dictionary<int, int> GetDrugPrices(IDialogContext context, bool newPrices = false)
         {
             var drugPrices = new Dictionary<int, int>();
 
             var db = new DrugBotDataContext();
             var drugs = db.GetDrugs().ToList();
 
-            if (!context.UserData.TryGetValue(StateKeys.DrugPrices, out drugPrices))
+            if (!context.UserData.TryGetValue(StateKeys.DrugPrices, out drugPrices) || newPrices)
             {
                 drugPrices = new Dictionary<int, int>();
 
@@ -122,6 +122,9 @@ namespace DrugBot.Dialogs
             user.Wallet = Defaults.StartingMoney;
             user.DayOfGame = Defaults.GameStartDay;
             user.LocationId = Defaults.LocationId;
+
+            // clear out inventory
+            db.InventoryItems.RemoveRange(user.Inventory);
 
             db.Commit();
 
