@@ -11,7 +11,7 @@ using DrugBot.Common;
 namespace DrugBot.Dialogs
 {
     [Serializable]
-    public class BuyDialog : BaseDialog, IDialog<object>
+    public class BuyDialog : BaseDialog, IDialog<GameState>
     {
         public async Task StartAsync(IDialogContext context)
         {
@@ -92,8 +92,6 @@ namespace DrugBot.Dialogs
             {
                 var quantity = Convert.ToInt32(qty);
 
-                var userId = context.UserData.Get<int>(StateKeys.UserId);
-
                 // todo: put this somewhere common
                 var db = new DrugBotDataContext();
                 var drugs = db.GetDrugs().ToList()
@@ -104,7 +102,7 @@ namespace DrugBot.Dialogs
                         DrugId = x.DrugId,
                     });
 
-                var user = db.Users.FirstOrDefault(x => x.UserId == userId);
+                var user = this.GetUser(context);
 
                 if(user != null)
                 {

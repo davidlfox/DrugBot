@@ -5,11 +5,12 @@ using System.Linq;
 using System.Web;
 using System.Threading.Tasks;
 using Microsoft.Bot.Connector;
+using DrugBot.Common;
 
 namespace DrugBot.Dialogs
 {
     [Serializable]
-    public class MainMenuDialog : IDialog<object>
+    public class MainMenuDialog : BaseDialog, IDialog<object>
     {
         /// <summary>
         /// Print menu to navigate between traveling, buying, selling, etc
@@ -80,11 +81,21 @@ namespace DrugBot.Dialogs
             }
         }
 
-        private async Task ResumeMainMenu(IDialogContext context, IAwaitable<object> result)
+        private async Task ResumeMainMenu(IDialogContext context, IAwaitable<GameState> result)
         {
-            var message = await result;
-            // print menu and start again--hopefully
-            await StartAsync(context);
+            var state = await result;
+
+            if (state.IsGameOver)
+            {
+                var money = this.ResetUser(context);
+                await context.PostAsync("Game Over.");
+                await context.PostAsync($"You finished with {money:0C}.");
+            }
+            else
+            {
+                // print menu and start again--hopefully
+                await StartAsync(context);
+            }
         }
     }
 }

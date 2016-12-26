@@ -34,6 +34,8 @@ namespace DrugBot.Dialogs
 
                 // start in washington, dc
                 context.UserData.SetValue<int>(StateKeys.LocationId, 1);
+                user.LocationId = 1;
+                db.Commit();
 
                 if (user == null)
                 {
