@@ -43,7 +43,7 @@ namespace DrugBot.Dialogs
             HeroCard heroCard = new HeroCard
             {
                 Buttons = buttons,
-                Text = $"What do you want to do? You have {user.Wallet:C0}."
+                Text = $"You have {user.Wallet:C0}. What do you want to do?"
             };
 
             var attachment = heroCard.ToAttachment();

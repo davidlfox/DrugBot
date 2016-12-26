@@ -63,18 +63,32 @@ namespace DrugBot.Dialogs
                 {
                     var drug = drugs.Single(x => x.Name == message.Text.ToLower());
 
-                    if (drugPrices.Any(x => x.Key == drug.DrugId))
-                    {
-                        context.UserData.SetValue(StateKeys.DrugToSell, drug.Name);
+                    var user = this.GetUser(context);
+                    var inventory = user.Inventory.FirstOrDefault(x => x.DrugId == drug.DrugId);
 
-                        // prompt for quantity
-                        PromptDialog.Number(context, SellQuantityAsync, "How much do you want to sell?");
+                    if (inventory != null && inventory.Quantity > 0)
+                    {
+                        if (drugPrices.Any(x => x.Key == drug.DrugId))
+                        {
+                            context.UserData.SetValue(StateKeys.DrugToSell, drug.Name);
+
+                            // get inventory
+                            var qty = user.Inventory.Single(x => x.DrugId == drug.DrugId).Quantity;
+
+                            // prompt for quantity
+                            PromptDialog.Number(context, SellQuantityAsync, $"You have {qty:n0}. How much do you want to sell?");
+                        }
                     }
                     else
                     {
-                        await context.PostAsync("You can't sell that here...");
+                        await context.PostAsync("You don't have any of that. Type CANCEL if you don't want to sell anything.");
                         context.Wait(MessageReceivedAsync);
                     }
+                }
+                else
+                {
+                    await context.PostAsync("You can't sell that...Type CANCEL if you don't want to sell anything.");
+                    context.Wait(MessageReceivedAsync);
                 }
             }
         }

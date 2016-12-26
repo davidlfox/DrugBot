@@ -40,6 +40,7 @@ namespace DrugBot.Dialogs
                 var drugs = db.GetDrugs().ToList()
                     .Select(x => new
                     {
+                        DrugId = x.DrugId,
                         Name = x.Name.ToLower(),
                     });
 
@@ -50,12 +51,17 @@ namespace DrugBot.Dialogs
                     var drug = drugs.Single(x => x.Name == message.Text.ToLower());
                     context.UserData.SetValue(StateKeys.DrugToBuy, drug.Name);
 
+                    // get affordability
+                    var user = this.GetUser(context);
+                    var drugPrice = this.GetDrugPrices(context).Single(x => x.Key == drug.DrugId).Value;
+                    var canAfford = user.Wallet / drugPrice;
+
                     // prompt for quantity
-                    PromptDialog.Number(context, BuyQuantityAsync, "How much do you want to buy?");
+                    PromptDialog.Number(context, BuyQuantityAsync, $"You can afford {canAfford:n0}. How much do you want to buy?");
                 }
                 else
                 {
-                    await context.PostAsync("That doesn't sound like a drug that's available here");
+                    await context.PostAsync("You can't buy that...Type CANCEL if you don't want to buy anything.");
                     context.Wait(MessageReceivedAsync);
                 }
             }
