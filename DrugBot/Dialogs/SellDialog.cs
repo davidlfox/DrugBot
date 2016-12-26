@@ -40,7 +40,7 @@ namespace DrugBot.Dialogs
 
                     buttons.Add(new CardAction
                     {
-                        Title = $"{drug.Name} ({drugPrice:C0})",
+                        Title = $"{drug.Name} ({drugPrice.Value:C0})",
                         Type = ActionTypes.ImBack,
                         Value = drug.Name,
                     });
