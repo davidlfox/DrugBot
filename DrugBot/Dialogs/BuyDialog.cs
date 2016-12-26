@@ -50,7 +50,7 @@ namespace DrugBot.Dialogs
 
             if (message.Text.ToLower() == "cancel")
             {
-                context.Done<object>(null);
+                this.Done(context);
             }
             else
             {
@@ -86,7 +86,7 @@ namespace DrugBot.Dialogs
             if(qty < 1)
             {
                 await context.PostAsync("Looks like you don't want to buy any--thanks for wasting my time");
-                context.Done<object>(null);
+                this.Done(context);
             }
             else
             {
@@ -143,12 +143,12 @@ namespace DrugBot.Dialogs
 
                         db.SaveChanges();
 
-                        context.Done<object>(null);
+                        this.Done(context);
                     }
                     else
                     {
                         await context.PostAsync("You don't have enough money to buy that.");
-                        context.Done<object>(null);
+                        this.Done(context);
                     }
                 }
             }

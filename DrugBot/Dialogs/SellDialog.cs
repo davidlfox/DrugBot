@@ -24,7 +24,7 @@ namespace DrugBot.Dialogs
             if (!user.Inventory.Any(x => x.Quantity > 0))
             {
                 await context.PostAsync("You don't have anything to sell...");
-                context.Done<object>(null);
+                this.Done(context);
             }
             else
             {
@@ -60,7 +60,7 @@ namespace DrugBot.Dialogs
 
             if (message.Text.ToLower() == "cancel")
             {
-                context.Done<object>(null);
+                this.Done(context);
             }
             else
             {
@@ -101,7 +101,7 @@ namespace DrugBot.Dialogs
             if (qty < 1)
             {
                 await context.PostAsync("Looks like you don't want to sell any--thanks for wasting my time");
-                context.Done<object>(null);
+                this.Done(context);
             }
             else
             {
@@ -138,12 +138,12 @@ namespace DrugBot.Dialogs
 
                     await context.PostAsync($"You sold {qty} for {total:C0}.");
                     await context.PostAsync($"You have {user.Wallet:C0} in your wallet.");
-                    context.Done<object>(null);
+                    this.Done(context);
                 }
                 else
                 {
                     await context.PostAsync("You don't have that much to sell...");
-                    context.Done<object>(null);
+                    this.Done(context);
                 }
             }
         }

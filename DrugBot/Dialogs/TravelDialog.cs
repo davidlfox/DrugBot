@@ -39,7 +39,7 @@ namespace DrugBot.Dialogs
 
             if (message.Text.ToLower() == "cancel")
             {
-                context.Done<object>(null);
+                this.Done(context);
             }
             else
             {
@@ -51,7 +51,7 @@ namespace DrugBot.Dialogs
                 if (dst == null)
                 {
                     await context.PostAsync("I don't know where that is...");
-                    context.Done<object>(null);
+                    this.Done(context);
                 }
                 else
                 {
@@ -60,12 +60,12 @@ namespace DrugBot.Dialogs
                     if (day == 31)
                     {
                         // end game
-                        context.Done(new GameState { IsGameOver = true });
+                        this.Done(context, new GameState { IsGameOver = true });
                     }
                     else
                     {
                         await context.PostAsync($"Off to {dst.Name}!");
-                        context.Done(new GameState { IsTraveling = true });
+                        this.Done(context, new GameState { IsTraveling = true });
                     }
                 }
             }

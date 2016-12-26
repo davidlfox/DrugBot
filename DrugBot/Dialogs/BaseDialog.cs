@@ -12,6 +12,16 @@ namespace DrugBot.Dialogs
     [Serializable]
     public class BaseDialog
     {
+        protected void Done(IDialogContext context)
+        {
+            context.Done(new GameState { });
+        }
+
+        protected void Done(IDialogContext context, GameState state)
+        {
+            context.Done(state);
+        }
+
         protected IMessageActivity SetupHeroResponse(IDialogContext context, List<CardAction> buttons, string text)
         {
             // setup hero card
