@@ -102,7 +102,8 @@ namespace DrugBot.Dialogs
                         DrugId = x.DrugId,
                     });
 
-                var user = this.GetUser(context);
+                var userId = context.UserData.Get<int>(StateKeys.UserId);
+                var user = db.Users.FirstOrDefault(x => x.UserId == userId);
 
                 if(user != null)
                 {
