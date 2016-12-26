@@ -34,7 +34,6 @@ namespace DrugBot.Dialogs
 
                 // start in washington, dc
                 context.UserData.SetValue<int>(StateKeys.LocationId, 1);
-                user.LocationId = 1;
                 db.Commit();
 
                 if (user == null)
@@ -63,7 +62,7 @@ namespace DrugBot.Dialogs
             Name = await result;
 
             var db = new DrugBotDataContext();
-            var user = db.AddUser(BotUserId, Name, 1000);
+            var user = db.AddUser(BotUserId, Name);
             db.Commit();
 
             context.UserData.SetValue<int>(StateKeys.UserId, user.UserId);

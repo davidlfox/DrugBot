@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DrugBot.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
@@ -29,14 +30,15 @@ namespace DrugBot.Data
             return user;
         }
 
-        public User AddUser(string botUserID, string name, int wallet)
+        public User AddUser(string botUserID, string name)
         {
             var user = new User
             {
                 BotUserId = botUserID,
                 Name = name,
-                Wallet = wallet,
-                DayOfGame = 1,
+                Wallet = Defaults.StartingMoney,
+                DayOfGame = Defaults.GameStartDay,
+                LocationId = Defaults.LocationId,
             };
 
             this.AddUser(user);
