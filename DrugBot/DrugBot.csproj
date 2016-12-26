@@ -159,6 +159,10 @@
     <Compile Include="Migrations\201612150457340_inventory-quantity.Designer.cs">
       <DependentUpon>201612150457340_inventory-quantity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612261957186_day-of-game.cs" />
+    <Compile Include="Migrations\201612261957186_day-of-game.Designer.cs">
+      <DependentUpon>201612261957186_day-of-game.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -186,6 +190,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612150457340_inventory-quantity.resx">
       <DependentUpon>201612150457340_inventory-quantity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612261957186_day-of-game.resx">
+      <DependentUpon>201612261957186_day-of-game.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

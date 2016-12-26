@@ -11,7 +11,6 @@ namespace DrugBot.Data
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Drug> Drugs { get; set; }
-        public DbSet<Game> Games { get; set; }
         public DbSet<Location> Locations { get; set; }
 
         public int Commit()
@@ -37,6 +36,7 @@ namespace DrugBot.Data
                 BotUserId = botUserID,
                 Name = name,
                 Wallet = wallet,
+                DayOfGame = 1,
             };
 
             this.AddUser(user);
@@ -77,6 +77,11 @@ namespace DrugBot.Data
         /// </summary>
         public int Wallet { get; set; }
 
+        /// <summary>
+        /// Day of current game
+        /// </summary>
+        public int DayOfGame { get; set; }
+
         [ForeignKey("Location")]
         public int? LocationId { get; set; }
         public virtual Location Location { get; set; }
@@ -114,28 +119,6 @@ namespace DrugBot.Data
         /// </summary>
         public int MaxPrice { get; set; }
 
-    }
-
-    public class Game
-    {
-        /// <summary>
-        /// Primary key
-        /// </summary>
-        public int GameId { get; set; }
-
-        /// <summary>
-        /// This may be BF's conversation id
-        /// </summary>
-        public string ConversationId { get; set; }
-
-        /// <summary>
-        /// Day of game cycle
-        /// </summary>
-        public byte GameDay { get; set; }
-
-        [ForeignKey("User")]
-        public int UserId { get; set; }
-        public virtual User User { get; set; }
     }
 
     public class Location
