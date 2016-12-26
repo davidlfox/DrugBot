@@ -32,6 +32,13 @@ namespace DrugBot.Dialogs
             return activity;
         }
 
+        protected User GetUser(IDialogContext context)
+        {
+            var userId = context.UserData.Get<int>(StateKeys.UserId);
+            var db = new DrugBotDataContext();
+            return db.Users.FirstOrDefault(x => x.UserId == userId);
+        }
+
         protected Dictionary<int, int> GetDrugPrices(IDialogContext context)
         {
             var drugPrices = new Dictionary<int, int>();
@@ -64,6 +71,53 @@ namespace DrugBot.Dialogs
             return db.Locations;
         }
 
+        protected List<LocationWithLower> GetLocationsWithLower()
+        {
+            return this.GetLocations()
+                .ToList()
+                .Select(x => new LocationWithLower
+                {
+                    LocationId = x.LocationId,
+                    Name = x.Name,
+                    NameLower = x.Name.ToLower(),
+                })
+                .ToList();
+        }
+
+        protected int TravelUser(int userId, int locationId)
+        {
+            var db = new DrugBotDataContext();
+            var user = db.Users.FirstOrDefault(x => x.UserId == userId);
+            if (user != null)
+            {
+                user.LocationId = locationId;
+                user.DayOfGame = user.DayOfGame + 1;
+
+                db.Commit();
+
+                return user.DayOfGame;
+            }
+
+            return 0;
+        }
+
+        protected int ResetUser(IDialogContext context)
+        {
+            var db = new DrugBotDataContext();
+            var userId = context.UserData.Get<int>(StateKeys.UserId);
+            var user = db.Users.FirstOrDefault(x => x.UserId == userId);
+
+            var money = user.Wallet;
+
+            user.Wallet = Defaults.StartingMoney;
+            user.DayOfGame = Defaults.GameStartDay;
+            user.LocationId = Defaults.LocationId;
+
+            db.Commit();
+
+            return money;
+        }
+
         protected void AddCancelButton(ICollection<CardAction> buttons)
         {
             buttons.Add(new CardAction
@@ -73,5 +127,12 @@ namespace DrugBot.Dialogs
                 Value = "Cancel",
             });
         }
+    }
+
+    public class LocationWithLower
+    {
+        public int LocationId { get; set; }
+        public string Name { get; set; }
+        public string NameLower { get; set; }
     }
 }

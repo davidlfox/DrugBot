@@ -5,11 +5,12 @@ using System.Linq;
 using System.Web;
 using System.Threading.Tasks;
 using Microsoft.Bot.Connector;
+using DrugBot.Common;
 
 namespace DrugBot.Dialogs
 {
     [Serializable]
-    public class TravelDialog : BaseDialog, IDialog<object>
+    public class TravelDialog : BaseDialog, IDialog<GameState>
     {
         public async Task StartAsync(IDialogContext context)
         {
@@ -39,6 +40,34 @@ namespace DrugBot.Dialogs
             if (message.Text.ToLower() == "cancel")
             {
                 context.Done<object>(null);
+            }
+            else
+            {
+                var locations = this.GetLocationsWithLower();
+                // try to figure out where they want to go
+                var dst = locations.FirstOrDefault(x => x.NameLower == message.Text.ToLower() 
+                    || x.NameLower.StartsWith(message.Text.ToLower()));
+
+                if (dst == null)
+                {
+                    await context.PostAsync("I don't know where that is...");
+                    context.Done<object>(null);
+                }
+                else
+                {
+                    var day = this.TravelUser(context.UserData.Get<int>(StateKeys.UserId), dst.LocationId);
+
+                    if (day == 31)
+                    {
+                        // end game
+                        context.Done(new GameState { IsGameOver = true });
+                    }
+                    else
+                    {
+                        await context.PostAsync($"Off to {dst.Name}!");
+                        context.Done(new GameState { IsTraveling = true });
+                    }
+                }
             }
         }
     }

@@ -91,6 +91,14 @@ namespace DrugBot.Dialogs
                 await context.PostAsync("Game Over.");
                 await context.PostAsync($"You finished with {money:0C}.");
             }
+            else if (state.IsTraveling)
+            {
+                // get day and location
+                var user = this.GetUser(context);
+                var location = this.GetLocations().Single(x => x.LocationId == user.LocationId);
+                await context.PostAsync($"It's day {user.DayOfGame}. You're in {location.Name}.");
+                await StartAsync(context);
+            }
             else
             {
                 // print menu and start again--hopefully
