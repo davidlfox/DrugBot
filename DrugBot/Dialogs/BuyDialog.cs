@@ -38,22 +38,7 @@ namespace DrugBot.Dialogs
 
             this.AddCancelButton(buttons);
 
-            // setup hero card
-            HeroCard heroCard = new HeroCard
-            {
-                Buttons = buttons,
-                Text = "What do you want to buy?"
-            };
-
-            // setup attachment
-            var attachment = heroCard.ToAttachment();
-
-            // send hero card to user
-            var activity = context.MakeMessage();
-            activity.Attachments = new List<Attachment>();
-            activity.Attachments.Add(attachment);
-
-            await context.PostAsync(activity);
+            await context.PostAsync(this.SetupHeroResponse(context, buttons, "What do you want to buy?"));
 
             // wait for drug selection
             context.Wait(MessageReceivedAsync);

@@ -12,6 +12,26 @@ namespace DrugBot.Dialogs
     [Serializable]
     public class BaseDialog
     {
+        protected IMessageActivity SetupHeroResponse(IDialogContext context, List<CardAction> buttons, string text)
+        {
+            // setup hero card
+            HeroCard heroCard = new HeroCard
+            {
+                Buttons = buttons,
+                Text = text,
+            };
+
+            // setup attachment
+            var attachment = heroCard.ToAttachment();
+
+            // send hero card to user
+            var activity = context.MakeMessage();
+            activity.Attachments = new List<Attachment>();
+            activity.Attachments.Add(attachment);
+
+            return activity;
+        }
+
         protected Dictionary<int, int> GetDrugPrices(IDialogContext context)
         {
             var drugPrices = new Dictionary<int, int>();
