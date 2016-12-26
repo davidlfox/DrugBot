@@ -38,10 +38,12 @@ namespace DrugBot.Dialogs
                 Value = "Sell",
             });
 
+            var user = this.GetUser(context);
+
             HeroCard heroCard = new HeroCard
             {
                 Buttons = buttons,
-                Text = "What do you want to do?"
+                Text = $"What do you want to do? You have {user.Wallet:C0}."
             };
 
             var attachment = heroCard.ToAttachment();
