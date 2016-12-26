@@ -28,23 +28,7 @@ namespace DrugBot.Dialogs
             }
             else
             {
-                var drugs = db.GetDrugs().ToList();
-
-                // display drug prices
-                var drugPrices = this.GetDrugPrices(context);
-
-                var buttons = new List<CardAction>();
-                foreach (var drugPrice in drugPrices)
-                {
-                    var drug = drugs.Single(x => x.DrugId == drugPrice.Key);
-
-                    buttons.Add(new CardAction
-                    {
-                        Title = $"{drug.Name} ({drugPrice.Value:C0})",
-                        Type = ActionTypes.ImBack,
-                        Value = drug.Name,
-                    });
-                }
+                var buttons = this.GetDrugButtons(context);
 
                 this.AddCancelButton(buttons);
 

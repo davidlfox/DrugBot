@@ -131,6 +131,33 @@ namespace DrugBot.Dialogs
             return money;
         }
 
+        public List<CardAction> GetDrugButtons(IDialogContext context)
+        {
+            var drugPrices = this.GetDrugPrices(context);
+            var drugs = this.GetDrugs();
+            var buttons = new List<CardAction>();
+
+            foreach (var drugPrice in drugPrices)
+            {
+                var drug = drugs.Single(x => x.DrugId == drugPrice.Key);
+
+                buttons.Add(new CardAction
+                {
+                    Title = $"{drug.Name}: {drugPrice.Value:C0}",
+                    Type = ActionTypes.ImBack,
+                    Value = drug.Name,
+                });
+            }
+
+            return buttons;
+        }
+
+        protected IQueryable<Drug> GetDrugs()
+        {
+            var db = new DrugBotDataContext();
+            return db.Drugs;
+        }
+
         protected void AddCancelButton(ICollection<CardAction> buttons)
         {
             buttons.Add(new CardAction

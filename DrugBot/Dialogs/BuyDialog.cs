@@ -15,26 +15,8 @@ namespace DrugBot.Dialogs
     {
         public async Task StartAsync(IDialogContext context)
         {
-            // get drugs/random prices
-            var db = new DrugBotDataContext();
-            var drugs = db.GetDrugs().ToList();
-
-            // check state data for existing drug prices and dont overwrite these location's prices
-            var drugPrices = this.GetDrugPrices(context);
-
             // setup buttons
-            var buttons = new List<CardAction>();
-            foreach(var drugPrice in drugPrices)
-            {
-                var drug = drugs.Single(x => x.DrugId == drugPrice.Key);
-
-                buttons.Add(new CardAction
-                {
-                    Title = $"{drug.Name}: {drugPrice.Value:C0}",
-                    Type = ActionTypes.ImBack,
-                    Value = drug.Name,
-                });
-            }
+            var buttons = this.GetDrugButtons(context);
 
             this.AddCancelButton(buttons);
 
