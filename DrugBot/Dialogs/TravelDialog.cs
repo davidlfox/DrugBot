@@ -57,7 +57,7 @@ namespace DrugBot.Dialogs
                 {
                     var day = this.TravelUser(context.UserData.Get<int>(StateKeys.UserId), dst.LocationId);
 
-                    if (day == 31)
+                    if (day == Defaults.GameEndDay)
                     {
                         // end game
                         this.Done(context, new GameState { IsGameOver = true });

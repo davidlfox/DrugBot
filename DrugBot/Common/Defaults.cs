@@ -10,5 +10,6 @@ namespace DrugBot.Common
         public readonly static int StartingMoney = 1000;
         public readonly static int GameStartDay = 1;
         public readonly static int LocationId = 1;
+        public readonly static int GameEndDay = 31;
     }
 }

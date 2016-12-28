@@ -126,6 +126,9 @@ namespace DrugBot.Dialogs
             // clear out inventory
             db.InventoryItems.RemoveRange(user.Inventory);
 
+            // regenerate drug prices for this user
+            this.GetDrugPrices(context, true);
+
             db.Commit();
 
             return money;
