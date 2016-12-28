@@ -40,10 +40,12 @@ namespace DrugBot.Dialogs
 
             var user = this.GetUser(context);
 
+            var location = this.GetLocation(context);
+
             HeroCard heroCard = new HeroCard
             {
                 Buttons = buttons,
-                Text = $"You have {user.Wallet:C0}. What do you want to do?"
+                Text = $"You have {user.Wallet:C0}. You're in {location.Name}. What do you want to do?"
             };
 
             var attachment = heroCard.ToAttachment();

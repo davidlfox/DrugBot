@@ -55,19 +55,32 @@ namespace DrugBot.Dialogs
                 }
                 else
                 {
-                    var day = this.TravelUser(context.UserData.Get<int>(StateKeys.UserId), dst.LocationId);
+                    // check to make sure they're actually leaving
+                    var locationId = context.UserData.Get<int>(StateKeys.LocationId);
 
-                    if (day == Defaults.GameEndDay)
+                    if (locationId == dst.LocationId)
                     {
-                        // end game
-                        this.Done(context, new GameState { IsGameOver = true });
+                        await context.PostAsync("You're already here...");
+                        this.Done(context);
                     }
                     else
                     {
-                        this.GetDrugPrices(context, true);
+                        var day = this.TravelUser(context.UserData.Get<int>(StateKeys.UserId), dst.LocationId);
 
-                        await context.PostAsync($"Off to {dst.Name}!");
-                        this.Done(context, new GameState { IsTraveling = true });
+                        context.UserData.SetValue<int>(StateKeys.LocationId, dst.LocationId);
+
+                        if (day == Defaults.GameEndDay)
+                        {
+                            // end game
+                            this.Done(context, new GameState { IsGameOver = true });
+                        }
+                        else
+                        {
+                            this.GetDrugPrices(context, true);
+
+                            await context.PostAsync($"Off to {dst.Name}!");
+                            this.Done(context, new GameState { IsTraveling = true });
+                        }
                     }
                 }
             }

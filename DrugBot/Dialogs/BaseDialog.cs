@@ -94,6 +94,13 @@ namespace DrugBot.Dialogs
                 .ToList();
         }
 
+        protected Location GetLocation(IDialogContext context)
+        {
+            var locationId = context.UserData.Get<int>(StateKeys.LocationId);
+            var db = new DrugBotDataContext();
+            return db.Locations.Single(x => x.LocationId == locationId);
+        }
+
         protected int TravelUser(int userId, int locationId)
         {
             var db = new DrugBotDataContext();
