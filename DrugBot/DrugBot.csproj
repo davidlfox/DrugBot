@@ -132,7 +132,11 @@
     <Compile Include="Common\GameState.cs" />
     <Compile Include="Common\StateKeys.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Data\Drug.cs" />
     <Compile Include="Data\DrugBotDataContext.cs" />
+    <Compile Include="Data\InventoryItem.cs" />
+    <Compile Include="Data\Location.cs" />
+    <Compile Include="Data\User.cs" />
     <Compile Include="Dialogs\BaseDialog.cs" />
     <Compile Include="Dialogs\BuyDialog.cs" />
     <Compile Include="Dialogs\GameDialog.cs" />
