@@ -102,9 +102,8 @@ namespace DrugBot.Dialogs
                 await context.PostAsync("Game Over.");
                 await context.PostAsync($"You finished with {user.Wallet:C0}.");
 
-                // reset user
+                // reset user (this commits db changes)
                 this.ResetUser(context);
-                db.Commit();
 
                 // todo: show leaderboard
 

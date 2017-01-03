@@ -135,6 +135,8 @@ namespace DrugBot.Dialogs
 
             // regenerate drug prices for this user
             this.GetDrugPrices(context, true);
+
+            db.Commit();
         }
 
         public List<CardAction> GetDrugButtons(IDialogContext context)
