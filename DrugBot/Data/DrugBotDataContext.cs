@@ -14,6 +14,7 @@ namespace DrugBot.Data
         public DbSet<Drug> Drugs { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
+        public DbSet<Game> Games { get; set; }
 
         public int Commit()
         {
@@ -56,5 +57,16 @@ namespace DrugBot.Data
         {
             return this.Drugs;
         }
+
+        public void AddGame(int userId, long score)
+        {
+            this.Games.Add(new Game
+            {
+                Score = score,
+                UserId = userId,
+            });
+        }
+
+        // todo: get leaderboard collection
     }
 }

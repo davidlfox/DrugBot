@@ -134,6 +134,7 @@
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Data\Drug.cs" />
     <Compile Include="Data\DrugBotDataContext.cs" />
+    <Compile Include="Data\Game.cs" />
     <Compile Include="Data\InventoryItem.cs" />
     <Compile Include="Data\Location.cs" />
     <Compile Include="Data\User.cs" />
@@ -170,6 +171,10 @@
     <Compile Include="Migrations\201612261957186_day-of-game.Designer.cs">
       <DependentUpon>201612261957186_day-of-game.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701032131476_add-game-logs.cs" />
+    <Compile Include="Migrations\201701032131476_add-game-logs.Designer.cs">
+      <DependentUpon>201701032131476_add-game-logs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -200,6 +205,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612261957186_day-of-game.resx">
       <DependentUpon>201612261957186_day-of-game.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701032131476_add-game-logs.resx">
+      <DependentUpon>201701032131476_add-game-logs.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
