@@ -67,6 +67,12 @@ namespace DrugBot.Data
             });
         }
 
-        // todo: get leaderboard collection
+        public List<Game> GetLeaderboard()
+        {
+            return this.Games
+                .OrderByDescending(x => x.Score)
+                .Take(Defaults.LeaderboardSize)
+                .ToList();
+        }
     }
 }

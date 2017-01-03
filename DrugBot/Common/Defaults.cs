@@ -11,5 +11,7 @@ namespace DrugBot.Common
         public readonly static int GameStartDay = 1;
         public readonly static int LocationId = 1;
         public readonly static int GameEndDay = 31;
+        public readonly static int GameEndDay = 2;
+        public readonly static byte LeaderboardSize = 5;
     }
 }

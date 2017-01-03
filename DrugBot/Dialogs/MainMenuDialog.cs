@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Connector;
 using DrugBot.Common;
 using DrugBot.Data;
+using System.Text;
 
 namespace DrugBot.Dialogs
 {
@@ -105,7 +106,17 @@ namespace DrugBot.Dialogs
                 // reset user (this commits db changes)
                 this.ResetUser(context);
 
-                // todo: show leaderboard
+                // show leaderboard
+                var leaders = db.GetLeaderboard();
+
+                var sb = new StringBuilder("Leaderboard:\n\n");
+
+                foreach (var leader in leaders)
+                {
+                    sb.Append($"{leader.User.Name}: {leader.Score:C0}\n\n");
+                }
+
+                await context.PostAsync(sb.ToString());
 
                 this.Done(context);
             }
