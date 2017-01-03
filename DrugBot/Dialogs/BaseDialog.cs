@@ -118,7 +118,7 @@ namespace DrugBot.Dialogs
             return 0;
         }
 
-        protected int ResetUser(IDialogContext context)
+        protected void ResetUser(IDialogContext context)
         {
             var db = new DrugBotDataContext();
             var userId = context.UserData.Get<int>(StateKeys.UserId);
@@ -135,10 +135,6 @@ namespace DrugBot.Dialogs
 
             // regenerate drug prices for this user
             this.GetDrugPrices(context, true);
-
-            db.Commit();
-
-            return money;
         }
 
         public List<CardAction> GetDrugButtons(IDialogContext context)

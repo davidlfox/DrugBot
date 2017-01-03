@@ -6,6 +6,7 @@ using System.Web;
 using System.Threading.Tasks;
 using Microsoft.Bot.Connector;
 using DrugBot.Common;
+using DrugBot.Data;
 
 namespace DrugBot.Dialogs
 {
@@ -91,9 +92,22 @@ namespace DrugBot.Dialogs
 
             if (state.IsGameOver)
             {
-                var money = this.ResetUser(context);
+                var user = this.GetUser(context);
+
+                // record log of game before resetting
+                var db = new DrugBotDataContext();
+                db.AddGame(user.UserId, user.Wallet);
+                db.Commit();
+
                 await context.PostAsync("Game Over.");
-                await context.PostAsync($"You finished with {money:C0}.");
+                await context.PostAsync($"You finished with {user.Wallet:C0}.");
+
+                // reset user
+                this.ResetUser(context);
+                db.Commit();
+
+                // todo: show leaderboard
+
                 this.Done(context);
             }
             else if (state.IsTraveling)
