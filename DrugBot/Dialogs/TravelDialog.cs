@@ -30,6 +30,14 @@ namespace DrugBot.Dialogs
             this.AddCancelButton(buttons);
 
             await context.PostAsync(this.SetupHeroResponse(context, buttons, "Where do you wanna go? It's gonna cost you a day!"));
+
+            // get day of game
+            var user = this.GetUser(context);
+            if (user.DayOfGame == Defaults.GameEndDay - 1)
+            {
+                await context.PostAsync("WARNING: This is the last day. You should offload your stash now. Your score is based on what's in your wallet--not inventory!");
+            }
+
             context.Wait(MessageReceivedAsync);
         }
 
