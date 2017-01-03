@@ -1,4 +1,5 @@
 ﻿using DrugBot.Common;
+using DrugBot.Migrations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,6 +16,11 @@ namespace DrugBot.Data
         public DbSet<Location> Locations { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
         public DbSet<Game> Games { get; set; }
+
+        public DrugBotDataContext()
+        {
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DrugBotDataContext, Configuration>());
+        }
 
         public int Commit()
         {
