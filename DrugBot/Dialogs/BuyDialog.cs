@@ -123,14 +123,21 @@ namespace DrugBot.Dialogs
                             // add this inventory for the firs time
                             var inventory = new InventoryItem
                             {
-                                User = user,
+                                UserId = user.UserId,
                                 DrugId = drug.DrugId,
                                 Quantity = quantity,
                             };
-                            user.Inventory.Add(inventory);
+                            db.AddInventory(inventory);
                         }
 
-                        db.SaveChanges();
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        catch
+                        {
+                            await context.PostAsync("Something happened when saving your buy inventory. Yeah, I'm still an alpha bot...");
+                        }
 
                         this.Done(context);
                     }

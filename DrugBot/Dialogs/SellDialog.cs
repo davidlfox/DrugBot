@@ -132,7 +132,14 @@ namespace DrugBot.Dialogs
                     var item = user.Inventory.Single(x => x.DrugId == drug.DrugId);
                     item.Quantity -= quantity;
 
-                    db.Commit();
+                    try
+                    {
+                        db.Commit();
+                    }
+                    catch
+                    {
+                        await context.PostAsync("Something happened when saving your sell inventory. Yeah, I'm still an alpha bot...");
+                    }
 
                     await context.PostAsync($"You sold {qty} for {total:C0}.");
                     await context.PostAsync($"You have {user.Wallet:C0} in your wallet.");
