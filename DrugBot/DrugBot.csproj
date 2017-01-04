@@ -132,6 +132,7 @@
     <Compile Include="Common\GameState.cs" />
     <Compile Include="Common\StateKeys.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Data\Attributes\UniqueNameValidationAttribute.cs" />
     <Compile Include="Data\Drug.cs" />
     <Compile Include="Data\DrugBotDataContext.cs" />
     <Compile Include="Data\Game.cs" />

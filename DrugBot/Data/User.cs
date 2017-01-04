@@ -1,5 +1,7 @@
-﻿using System;
+﻿using DrugBot.Data.Attributes;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
@@ -14,13 +16,17 @@ namespace DrugBot.Data
         public int UserId { get; set; }
 
         /// <summary>
-        /// not sure if we need this
+        /// The unique conversation id identifying the user. I think this is cool while the app is only setup for facebook
         /// </summary>
+        [Required]
         public string BotUserId { get; set; }
 
         /// <summary>
         /// Display name
         /// </summary>
+        [StringLength(30, ErrorMessage = "Too long--try using fewer than 30 characters")]
+        [Required]
+        //[UniqueUserName(ErrorMessage = "Name must be unique")]
         public string Name { get; set; }
 
         /// <summary>
