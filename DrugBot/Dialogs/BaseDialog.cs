@@ -212,6 +212,21 @@ namespace DrugBot.Dialogs
             await context.PostAsync(sb.ToString());
         }
 
+        protected async Task ShowLeaderboard(IDialogContext context, DrugBotDataContext db)
+        {
+            // show leaderboard
+            var leaders = db.GetLeaderboard();
+
+            var sb = new StringBuilder("Leaderboard:\n\n");
+
+            foreach (var leader in leaders)
+            {
+                sb.Append($"{leader.User.Name}: {leader.Score:C0}\n\n");
+            }
+
+            await context.PostAsync(sb.ToString());
+        }
+
         protected void AddCancelButton(ICollection<CardAction> buttons)
         {
             buttons.Add(new CardAction

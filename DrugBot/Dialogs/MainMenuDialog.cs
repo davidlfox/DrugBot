@@ -94,10 +94,10 @@ namespace DrugBot.Dialogs
 
                 await context.PostAsync("Game Over.");
                 await context.PostAsync($"You finished with {user.Wallet:C0}.");
+                await this.ShowLeaderboard(context, db);
 
                 // reset user (this commits db changes)
                 this.ResetUser(context);
-                await ShowLeaderboard(context, db);
 
                 this.Done(context);
             }
@@ -114,21 +114,6 @@ namespace DrugBot.Dialogs
                 // print menu and start again--hopefully
                 await StartAsync(context);
             }
-        }
-
-        private static async Task ShowLeaderboard(IDialogContext context, DrugBotDataContext db)
-        {
-            // show leaderboard
-            var leaders = db.GetLeaderboard();
-
-            var sb = new StringBuilder("Leaderboard:\n\n");
-
-            foreach (var leader in leaders)
-            {
-                sb.Append($"{leader.User.Name}: {leader.Score:C0}\n\n");
-            }
-
-            await context.PostAsync(sb.ToString());
         }
     }
 }

@@ -118,6 +118,7 @@ namespace DrugBot.Data
         public List<Game> GetLeaderboard()
         {
             return this.Games
+                .Include(x => x.User)
                 .OrderByDescending(x => x.Score)
                 .Take(Defaults.LeaderboardSize)
                 .ToList();
