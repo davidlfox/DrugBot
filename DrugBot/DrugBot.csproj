@@ -176,6 +176,14 @@
     <Compile Include="Migrations\201701032131476_add-game-logs.Designer.cs">
       <DependentUpon>201701032131476_add-game-logs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701032302041_unique-user-name.cs" />
+    <Compile Include="Migrations\201701032302041_unique-user-name.Designer.cs">
+      <DependentUpon>201701032302041_unique-user-name.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701040050274_required-botuserid.cs" />
+    <Compile Include="Migrations\201701040050274_required-botuserid.Designer.cs">
+      <DependentUpon>201701040050274_required-botuserid.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -209,6 +217,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701032131476_add-game-logs.resx">
       <DependentUpon>201701032131476_add-game-logs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701032302041_unique-user-name.resx">
+      <DependentUpon>201701032302041_unique-user-name.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701040050274_required-botuserid.resx">
+      <DependentUpon>201701040050274_required-botuserid.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
