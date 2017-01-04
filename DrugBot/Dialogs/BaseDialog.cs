@@ -5,6 +5,8 @@ using Microsoft.Bot.Connector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace DrugBot.Dialogs
@@ -167,6 +169,31 @@ namespace DrugBot.Dialogs
         {
             var db = new DrugBotDataContext();
             return db.Drugs;
+        }
+
+        protected async Task ShowInventory(IDialogContext context)
+        {
+            var user = this.GetUser(context);
+
+            var sb = new StringBuilder("Inventory:\n\n");
+
+            if(user.Inventory.Any(x => x.Quantity > 0))
+            {
+                foreach (var inventory in user.Inventory)
+                {
+                    // could have quantity: 0 in some cases, dont bother displaying
+                    if(inventory.Quantity > 0)
+                    {
+                        sb.Append($"{inventory.Drug.Name}: {inventory.Quantity}\n\n");
+                    }
+                }
+            }
+            else
+            {
+                sb.Append("Your inventory is empty");
+            }
+
+            await context.PostAsync(sb.ToString());
         }
 
         protected void AddCancelButton(ICollection<CardAction> buttons)

@@ -76,6 +76,11 @@ namespace DrugBot.Dialogs
                 case "sell":
                     context.Call(new SellDialog(), ResumeMainMenu);
                     break;
+                case "inventory":
+                    await this.ShowInventory(context);
+                    // is this too quick to show them commands again?
+                    await StartAsync(context);
+                    break;
                 case "prices":
                     // todo: display current prices
                     throw new NotImplementedException();
