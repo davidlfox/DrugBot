@@ -21,24 +21,11 @@ namespace DrugBot.Dialogs
         {
             // setup hero card
             var buttons = new List<CardAction>();
-            buttons.Add(new CardAction
+
+            foreach (var action in new string[] { "Inventory", "Buy", "Sell", "Prices", "Travel" })
             {
-                Title = "Travel",
-                Type = ActionTypes.ImBack,
-                Value = "Travel",
-            });
-            buttons.Add(new CardAction
-            {
-                Title = "Buy",
-                Type = ActionTypes.ImBack,
-                Value = "Buy",
-            });
-            buttons.Add(new CardAction
-            {
-                Title = "Sell",
-                Type = ActionTypes.ImBack,
-                Value = "Sell",
-            });
+                buttons.Add(new CardAction { Title = action, Type = ActionTypes.ImBack, Value = action });
+            }
 
             var user = this.GetUser(context);
 
@@ -82,8 +69,8 @@ namespace DrugBot.Dialogs
                     await StartAsync(context);
                     break;
                 case "prices":
-                    // todo: display current prices
-                    throw new NotImplementedException();
+                    await this.ShowPrices(context);
+                    await StartAsync(context);
                     break;
                 default:
                     await context.PostAsync("I don't understand that. You should probably type TRAVEL, or BUY, or SELL to continue...");

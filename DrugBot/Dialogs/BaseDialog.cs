@@ -196,6 +196,22 @@ namespace DrugBot.Dialogs
             await context.PostAsync(sb.ToString());
         }
 
+        protected async Task ShowPrices(IDialogContext context)
+        {
+            var drugPrices = this.GetDrugPrices(context);
+            var drugs = this.GetDrugs().ToList();
+
+            var sb = new StringBuilder("Prices:\n\n");
+
+            foreach(var drugPrice in drugPrices)
+            {
+                var drug = drugs.Single(x => x.DrugId == drugPrice.Key);
+                sb.Append($"{drug.Name}: {drugPrice.Value:C0}\n\n");
+            }
+
+            await context.PostAsync(sb.ToString());
+        }
+
         protected void AddCancelButton(ICollection<CardAction> buttons)
         {
             buttons.Add(new CardAction
