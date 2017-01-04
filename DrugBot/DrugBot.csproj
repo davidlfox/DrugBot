@@ -185,6 +185,10 @@
     <Compile Include="Migrations\201701040050274_required-botuserid.Designer.cs">
       <DependentUpon>201701040050274_required-botuserid.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701041532262_inventory-size.cs" />
+    <Compile Include="Migrations\201701041532262_inventory-size.Designer.cs">
+      <DependentUpon>201701041532262_inventory-size.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -224,6 +228,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701040050274_required-botuserid.resx">
       <DependentUpon>201701040050274_required-botuserid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701041532262_inventory-size.resx">
+      <DependentUpon>201701041532262_inventory-size.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

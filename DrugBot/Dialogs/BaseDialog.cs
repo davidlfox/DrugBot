@@ -174,8 +174,9 @@ namespace DrugBot.Dialogs
         protected async Task ShowInventory(IDialogContext context)
         {
             var user = this.GetUser(context);
+            var usedSpace = user.Inventory.Sum(x => x.Quantity);
 
-            var sb = new StringBuilder("Inventory:\n\n");
+            var sb = new StringBuilder($"Inventory: ({usedSpace}/{user.InventorySize})\n\n");
 
             if(user.Inventory.Any(x => x.Quantity > 0))
             {

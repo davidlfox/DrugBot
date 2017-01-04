@@ -15,15 +15,26 @@ namespace DrugBot.Dialogs
     {
         public async Task StartAsync(IDialogContext context)
         {
-            // setup buttons
-            var buttons = this.GetDrugButtons(context);
+            var user = this.GetUser(context);
 
-            this.AddCancelButton(buttons);
+            // does user have any space?
+            if(user.InventorySize > user.Inventory.Sum(x => x.Quantity))
+            {
+                // setup buttons
+                var buttons = this.GetDrugButtons(context);
 
-            await context.PostAsync(this.SetupHeroResponse(context, buttons, "What do you want to buy?"));
+                this.AddCancelButton(buttons);
 
-            // wait for drug selection
-            context.Wait(MessageReceivedAsync);
+                await context.PostAsync(this.SetupHeroResponse(context, buttons, "What do you want to buy?"));
+
+                // wait for drug selection
+                context.Wait(MessageReceivedAsync);
+            }
+            else
+            {
+                await context.PostAsync("You can't carry anything else.");
+                this.Done(context);
+            }
         }
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
@@ -55,9 +66,10 @@ namespace DrugBot.Dialogs
                     var user = this.GetUser(context);
                     var drugPrice = this.GetDrugPrices(context).Single(x => x.Key == drug.DrugId).Value;
                     var canAfford = user.Wallet / drugPrice;
+                    var canHold = user.InventorySize - user.Inventory.Sum(x => x.Quantity);
 
                     // prompt for quantity
-                    PromptDialog.Number(context, BuyQuantityAsync, $"You can afford {canAfford:n0}. How much do you want to buy?");
+                    PromptDialog.Number(context, BuyQuantityAsync, $"You can afford {canAfford:n0} and hold {canHold}. How much do you want to buy?");
                 }
                 else
                 {
@@ -82,70 +94,80 @@ namespace DrugBot.Dialogs
 
                 // todo: put this somewhere common
                 var db = new DrugBotDataContext();
-                var drugs = db.GetDrugs().ToList()
-                    .Select(x => new
-                    {
-                        Name = x.Name,
-                        NameLower = x.Name.ToLower(),
-                        DrugId = x.DrugId,
-                    });
 
                 var userId = context.UserData.Get<int>(StateKeys.UserId);
                 var user = db.Users.FirstOrDefault(x => x.UserId == userId);
 
-                if(user != null)
+                if(user.InventorySize >= user.Inventory.Sum(x => x.Quantity) + qty)
                 {
-                    // determine drug price
-                    var drugPrices = this.GetDrugPrices(context);
-                    var drugToBuy = context.UserData.Get<string>(StateKeys.DrugToBuy);
-                    var drug = drugs.Single(x => x.NameLower == drugToBuy);
-                    var price = drugPrices[drug.DrugId];
-
-                    // check wallet for enough money
-                    if (user.Wallet >= price * qty)
-                    {
-                        var cost = price * quantity;
-
-                        // do transaction
-                        user.Wallet -= cost;
-                        await context.PostAsync($"You spent {cost:C0} on {qty} units of {drug.Name}");
-                        await context.PostAsync($"You have {user.Wallet:C0} remaining");
-
-                        // add inventory 
-                        if (user.Inventory.Any(x => x.Drug.Name == drug.Name))
+                    var drugs = db.GetDrugs().ToList()
+                        .Select(x => new
                         {
-                            // already has zero or more of this drug, add to it
-                            var inventory = user.Inventory.FirstOrDefault(x => x.Drug.Name == drug.Name);
-                            inventory.Quantity += quantity;
+                            Name = x.Name,
+                            NameLower = x.Name.ToLower(),
+                            DrugId = x.DrugId,
+                        });
+
+                    if(user != null)
+                    {
+                        // determine drug price
+                        var drugPrices = this.GetDrugPrices(context);
+                        var drugToBuy = context.UserData.Get<string>(StateKeys.DrugToBuy);
+                        var drug = drugs.Single(x => x.NameLower == drugToBuy);
+                        var price = drugPrices[drug.DrugId];
+
+                        // check wallet for enough money
+                        if (user.Wallet >= price * qty)
+                        {
+                            var cost = price * quantity;
+
+                            // do transaction
+                            user.Wallet -= cost;
+                            await context.PostAsync($"You spent {cost:C0} on {qty} units of {drug.Name}");
+                            await context.PostAsync($"You have {user.Wallet:C0} remaining");
+
+                            // add inventory 
+                            if (user.Inventory.Any(x => x.Drug.Name == drug.Name))
+                            {
+                                // already has zero or more of this drug, add to it
+                                var inventory = user.Inventory.FirstOrDefault(x => x.Drug.Name == drug.Name);
+                                inventory.Quantity += quantity;
+                            }
+                            else
+                            {
+                                // add this inventory for the firs time
+                                var inventory = new InventoryItem
+                                {
+                                    UserId = user.UserId,
+                                    DrugId = drug.DrugId,
+                                    Quantity = quantity,
+                                };
+                                db.AddInventory(inventory);
+                            }
+
+                            try
+                            {
+                                db.SaveChanges();
+                            }
+                            catch
+                            {
+                                await context.PostAsync("Something happened when saving your buy inventory. Yeah, I'm still an alpha bot...");
+                            }
+
+                            this.Done(context);
                         }
                         else
                         {
-                            // add this inventory for the firs time
-                            var inventory = new InventoryItem
-                            {
-                                UserId = user.UserId,
-                                DrugId = drug.DrugId,
-                                Quantity = quantity,
-                            };
-                            db.AddInventory(inventory);
+                            await context.PostAsync("You don't have enough money to buy that.");
+                            this.Done(context);
                         }
-
-                        try
-                        {
-                            db.SaveChanges();
-                        }
-                        catch
-                        {
-                            await context.PostAsync("Something happened when saving your buy inventory. Yeah, I'm still an alpha bot...");
-                        }
-
-                        this.Done(context);
                     }
-                    else
-                    {
-                        await context.PostAsync("You don't have enough money to buy that.");
-                        this.Done(context);
-                    }
+                }
+                else
+                {
+                    // not enough inventory space
+                    await context.PostAsync("You don't have enough inventory space to buy all that.");
+                    this.Done(context);
                 }
             }
         }

@@ -1,4 +1,5 @@
-﻿using DrugBot.Data.Attributes;
+﻿using DrugBot.Common;
+using DrugBot.Data.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +11,11 @@ namespace DrugBot.Data
 {
     public class User
     {
+        public User()
+        {
+            this.InventorySize = Defaults.InventorySize;
+        }
+
         /// <summary>
         /// Primary key, not necessarily the bot framework's definition of user id
         /// </summary>
@@ -42,6 +48,11 @@ namespace DrugBot.Data
         [ForeignKey("Location")]
         public int? LocationId { get; set; }
         public virtual Location Location { get; set; }
+
+        /// <summary>
+        /// Max inventory size
+        /// </summary>
+        public int InventorySize { get; set; }
 
         /// <summary>
         /// drugs on hand
