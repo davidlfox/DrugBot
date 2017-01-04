@@ -13,7 +13,7 @@ namespace DrugBot.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201701041532262_inventory-size"; }
+            get { return "201701042157267_inventory-size"; }
         }
         
         string IMigrationMetadata.Source
