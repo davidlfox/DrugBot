@@ -25,12 +25,13 @@ namespace DrugBot.Dialogs
         {
             var message = await result;
 
+            this.BotUserId = message.Conversation.Id;
+
             if (message.Text.ToLower() == "play")
             {
-                BotUserId = message.Conversation.Id;
 
                 var db = new DrugBotDataContext();
-                var user = db.FindUser(message.Conversation.Id);
+                var user = db.FindUser(this.BotUserId);
 
                 // start in washington, dc
                 context.UserData.SetValue<int>(StateKeys.LocationId, 1);
@@ -39,7 +40,7 @@ namespace DrugBot.Dialogs
                 if (user == null)
                 {
                     // first time playing, create user, prompt for name...
-                    PromptDialog.Text(context, SetupNameAsync, "What's your name?", "retry...");
+                    context.Call(new SetupNameDialog(), BackToSetupNameAsync);
                 }
                 else
                 {
@@ -57,30 +58,18 @@ namespace DrugBot.Dialogs
             }
         }
 
-        public virtual async Task SetupNameAsync(IDialogContext context, IAwaitable<string> result)
-        {
-            Name = await result;
-
-            var db = new DrugBotDataContext();
-            var user = db.AddUser(BotUserId, Name);
-            db.Commit();
-
-            context.UserData.SetValue<int>(StateKeys.UserId, user.UserId);
-
-            await context.PostAsync($"Thanks {Name}...let's make some money!");
-
-            // start in washington, dc
-            context.UserData.SetValue<int>(StateKeys.LocationId, 1);
-
-            // go to main menu
-            context.Call(new MainMenuDialog(), BackToSetupNameAsync);
-        }
-
         // callback from setup name soooo, as we're popping this off stack
         private async Task BackToSetupNameAsync(IDialogContext context, IAwaitable<GameState> result)
         {
             var message = await result;
-            context.Done(message);
+            if (message.IsNameReady)
+            {
+                context.Call(new MainMenuDialog(), BackToSetupNameAsync);
+            }
+            else
+            {
+                context.Done(message);
+            }
         }
     }
 }
