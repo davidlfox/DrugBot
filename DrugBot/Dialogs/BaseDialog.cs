@@ -12,6 +12,9 @@ namespace DrugBot.Dialogs
     [Serializable]
     public class BaseDialog
     {
+        protected string BotUserId;
+        protected string Name;
+
         protected void Done(IDialogContext context)
         {
             context.Done(new GameState { });

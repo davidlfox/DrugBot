@@ -7,15 +7,13 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Connector;
 using DrugBot.Data;
 using DrugBot.Common;
+using System.Web.ModelBinding;
 
 namespace DrugBot.Dialogs
 {
     [Serializable]
     public class GameDialog : BaseDialog, IDialog<GameState>
     {
-        string BotUserId;
-        string Name;
-
         public async Task StartAsync(IDialogContext context)
         {
             context.Wait(MessageReceivedAsync);
