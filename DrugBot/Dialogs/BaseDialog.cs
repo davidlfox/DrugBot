@@ -212,8 +212,10 @@ namespace DrugBot.Dialogs
             await context.PostAsync(sb.ToString());
         }
 
-        protected async Task ShowLeaderboard(IDialogContext context, DrugBotDataContext db)
+        protected async Task ShowLeaderboard(IDialogContext context)
         {
+            var db = new DrugBotDataContext();
+
             // show leaderboard
             var leaders = db.GetLeaderboard();
 

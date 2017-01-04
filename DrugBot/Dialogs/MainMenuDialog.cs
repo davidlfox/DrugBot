@@ -72,6 +72,10 @@ namespace DrugBot.Dialogs
                     await this.ShowPrices(context);
                     await StartAsync(context);
                     break;
+                case "leaderboard":
+                    await this.ShowLeaderboard(context);
+                    await StartAsync(context);
+                    break;
                 default:
                     await context.PostAsync("I don't understand that. You should probably type TRAVEL, or BUY, or SELL to continue...");
                     context.Wait(MessageReceivedAsync);
@@ -94,7 +98,7 @@ namespace DrugBot.Dialogs
 
                 await context.PostAsync("Game Over.");
                 await context.PostAsync($"You finished with {user.Wallet:C0}.");
-                await this.ShowLeaderboard(context, db);
+                await this.ShowLeaderboard(context);
 
                 // reset user (this commits db changes)
                 this.ResetUser(context);
