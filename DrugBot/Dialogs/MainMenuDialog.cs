@@ -107,8 +107,17 @@ namespace DrugBot.Dialogs
             }
             else if (state.IsTraveling)
             {
-                // get day and location
                 var user = this.GetUser(context);
+
+                // todo: random events for the day
+                if (RandomEvent.IsGoingToHappen)
+                {
+                    // pass context and user to do db things, receive string
+                    var eventText = RandomEvent.Get(context, user.UserId);
+                    await context.PostAsync(eventText);
+                }
+
+                // get day and location
                 var location = this.GetLocations().Single(x => x.LocationId == user.LocationId);
                 await context.PostAsync($"It's day {user.DayOfGame}. You're in {location.Name}.");
                 await StartAsync(context);

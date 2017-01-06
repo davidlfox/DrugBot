@@ -130,6 +130,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Common\Defaults.cs" />
     <Compile Include="Common\GameState.cs" />
+    <Compile Include="Common\RandomEvent.cs" />
     <Compile Include="Common\StateKeys.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Data\Attributes\UniqueNameValidationAttribute.cs" />
