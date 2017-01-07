@@ -31,7 +31,7 @@ namespace DrugBot.Dialogs
                 double rate = 0.0;
                 if (!context.UserData.TryGetValue<double>(StateKeys.LoanRate, out rate) || rate == 0.0)
                 {
-                    rate = RandomEvent.GetRandomDoubleBetween(0.05, 0.15);
+                    rate = RandomEvent.GetRandomDoubleBetween(0.25, 0.50);
                     context.UserData.SetValue<double>(StateKeys.LoanRate, rate);
                 }
 
@@ -68,7 +68,7 @@ namespace DrugBot.Dialogs
                     var rate = context.UserData.Get<double>(StateKeys.LoanRate);
                     var pointsRate = (int)(rate * 100);
                     this.SetupLoan(context, (int)amount, rate);
-                    await context.PostAsync($"Ok--get outta here wit' ya' money. Gonna cost ya' {pointsRate} a day, or I'll $^#! bury ya'");
+                    await context.PostAsync($"Ok--get outta here wit' ya' money. Gonna cost ya' {pointsRate} points a day, or I'll $^#! bury ya'");
                     this.Done(context);
                 }
             }
