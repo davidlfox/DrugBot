@@ -22,7 +22,7 @@ namespace DrugBot.Dialogs
             // setup hero card
             var buttons = new List<CardAction>();
 
-            foreach (var action in new string[] { "Inventory", "Buy", "Sell", "Prices", "Travel" })
+            foreach (var action in new string[] { "Inventory", "Buy", "Sell", "Prices", "Travel", "Loan Shark" })
             {
                 buttons.Add(new CardAction { Title = action, Type = ActionTypes.ImBack, Value = action });
             }
@@ -63,6 +63,10 @@ namespace DrugBot.Dialogs
                 case "sell":
                     context.Call(new SellDialog(), ResumeMainMenu);
                     break;
+                case "loan":
+                case "loan shark":
+                    context.Call(new LoanDialog(), ResumeMainMenu);
+                    break;
                 case "inventory":
                     await this.ShowInventory(context);
                     // is this too quick to show them commands again?
@@ -91,13 +95,22 @@ namespace DrugBot.Dialogs
             {
                 var user = this.GetUser(context);
 
+                var score = user.Wallet;
+
+                if (user.LoanDebt > 0)
+                {
+                    await context.PostAsync($"Ya' punk #$%! kid--I'm gonna break both your legs and take back my {user.LoanDebt:C0}!");
+                    await context.PostAsync("The loan shark proceeds to break your legs and take his money.");
+                    score = user.Wallet - user.LoanDebt;
+                }
+
                 // record log of game before resetting
                 var db = new DrugBotDataContext();
-                db.AddGame(user.UserId, user.Wallet);
+                db.AddGame(user.UserId, score);
                 db.Commit();
 
                 await context.PostAsync("Game Over.");
-                await context.PostAsync($"You finished with {user.Wallet:C0}.");
+                await context.PostAsync($"You finished with {score:C0}.");
                 await this.ShowLeaderboard(context);
 
                 // reset user (this commits db changes)

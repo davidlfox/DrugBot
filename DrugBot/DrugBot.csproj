@@ -146,6 +146,7 @@
     <Compile Include="Dialogs\MainMenuDialog.cs" />
     <Compile Include="Dialogs\SellDialog.cs" />
     <Compile Include="Dialogs\SetupNameDialog.cs" />
+    <Compile Include="Dialogs\LoanDialog.cs" />
     <Compile Include="Dialogs\TravelDialog.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -190,6 +191,10 @@
     <Compile Include="Migrations\201701042157267_inventory-size.Designer.cs">
       <DependentUpon>201701042157267_inventory-size.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701072215283_add-user-loan-stuff.cs" />
+    <Compile Include="Migrations\201701072215283_add-user-loan-stuff.Designer.cs">
+      <DependentUpon>201701072215283_add-user-loan-stuff.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -232,6 +237,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701042157267_inventory-size.resx">
       <DependentUpon>201701042157267_inventory-size.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701072215283_add-user-loan-stuff.resx">
+      <DependentUpon>201701072215283_add-user-loan-stuff.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

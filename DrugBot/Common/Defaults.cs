@@ -13,5 +13,6 @@ namespace DrugBot.Common
         public readonly static int GameEndDay = 31;
         public readonly static byte LeaderboardSize = 5;
         public readonly static int InventorySize = 1000;
+        public readonly static int MaxLoanMultiplier = 10000;
     }
 }

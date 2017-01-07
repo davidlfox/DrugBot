@@ -58,5 +58,15 @@ namespace DrugBot.Data
         /// drugs on hand
         /// </summary>
         public virtual ICollection<InventoryItem> Inventory { get; set; }
+
+        /// <summary>
+        /// The amount loaned
+        /// </summary>
+        public int LoanDebt { get; set; }
+
+        /// <summary>
+        /// Randomized loan rate
+        /// </summary>
+        public double LoanRate { get; set; }
     }
 }

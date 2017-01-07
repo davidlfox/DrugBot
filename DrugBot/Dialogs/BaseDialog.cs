@@ -114,6 +114,10 @@ namespace DrugBot.Dialogs
             {
                 user.LocationId = locationId;
                 user.DayOfGame = user.DayOfGame + 1;
+                if (user.LoanDebt > 0)
+                {
+                    user.LoanDebt = user.LoanDebt + (int)(user.LoanDebt * user.LoanRate);
+                }
 
                 db.Commit();
 
@@ -134,6 +138,8 @@ namespace DrugBot.Dialogs
             user.Wallet = Defaults.StartingMoney;
             user.DayOfGame = Defaults.GameStartDay;
             user.LocationId = Defaults.LocationId;
+            user.LoanDebt = 0;
+            user.LoanRate = 0.0;
 
             // clear out inventory
             db.InventoryItems.RemoveRange(user.Inventory);
@@ -228,6 +234,40 @@ namespace DrugBot.Dialogs
             }
 
             await context.PostAsync(sb.ToString());
+        }
+
+        protected void SetupLoan(IDialogContext context, int amount, double rate)
+        {
+            var db = new DrugBotDataContext();
+            var userId = context.UserData.Get<int>(StateKeys.UserId);
+            var user = db.Users.FirstOrDefault(x => x.UserId == userId);
+
+            user.LoanDebt = amount;
+            user.LoanRate = rate;
+            user.Wallet = user.Wallet + amount;
+
+            db.Commit();
+        }
+
+        protected bool PayLoan(IDialogContext context)
+        {
+            var db = new DrugBotDataContext();
+            var userId = context.UserData.Get<int>(StateKeys.UserId);
+            var user = db.Users.FirstOrDefault(x => x.UserId == userId);
+
+            if (user.Wallet >= user.LoanDebt)
+            {
+                user.Wallet = user.Wallet - user.LoanDebt;
+                user.LoanDebt = 0;
+                user.LoanRate = 0.0;
+                db.Commit();
+
+                context.UserData.SetValue<double>(StateKeys.LoanRate, 0.0);
+
+                return true;
+            }
+
+            return false;
         }
 
         protected void AddCancelButton(ICollection<CardAction> buttons)
