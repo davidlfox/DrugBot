@@ -17,6 +17,8 @@ namespace DrugBot.Dialogs
         protected string BotUserId;
         protected string Name;
 
+        private static readonly Random rand = new Random();
+
         protected void Done(IDialogContext context)
         {
             context.Done(new GameState { });
@@ -64,8 +66,6 @@ namespace DrugBot.Dialogs
             if (!context.UserData.TryGetValue(StateKeys.DrugPrices, out drugPrices) || newPrices)
             {
                 drugPrices = new Dictionary<int, int>();
-
-                var rand = new Random();
 
                 foreach (var drug in drugs)
                 {
