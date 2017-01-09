@@ -29,7 +29,10 @@ namespace DrugBot.Dialogs
 
             this.AddCancelButton(buttons);
 
-            await context.PostAsync(this.SetupHeroResponse(context, buttons, "Where do you wanna go? It's gonna cost you a day!"));
+            var locationId = context.UserData.Get<int>(StateKeys.LocationId);
+            var location = locations.Single(x => x.LocationId == locationId);
+
+            await context.PostAsync(this.SetupHeroResponse(context, buttons, $"You're in {location.Name}. Where do you wanna go? It's gonna cost you a day!"));
 
             // get day of game
             var user = this.GetUser(context);
