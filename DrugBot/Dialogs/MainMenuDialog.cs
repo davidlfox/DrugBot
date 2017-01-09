@@ -46,6 +46,14 @@ namespace DrugBot.Dialogs
 
             await context.PostAsync(activity);
 
+            // check for random event text
+            var eventText = string.Empty;
+            if (context.UserData.TryGetValue(StateKeys.RandomEventText, out eventText))
+            {
+                await context.PostAsync(eventText);
+                context.UserData.RemoveValue(StateKeys.RandomEventText);
+            }
+
             // get day of game
             if (user.DayOfGame == Defaults.GameEndDay - 1)
             {
@@ -134,7 +142,7 @@ namespace DrugBot.Dialogs
                 {
                     // pass context and user to do db things, receive string
                     var eventText = RandomEvent.Get(context, user.UserId);
-                    await context.PostAsync(eventText);
+                    context.UserData.SetValue(StateKeys.RandomEventText, eventText);
                 }
 
                 // get day and location
