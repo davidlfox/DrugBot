@@ -45,6 +45,13 @@ namespace DrugBot.Dialogs
             activity.Attachments.Add(attachment);
 
             await context.PostAsync(activity);
+
+            // get day of game
+            if (user.DayOfGame == Defaults.GameEndDay - 1)
+            {
+                await context.PostAsync(Defaults.GameEndWarningText);
+            }
+
             context.Wait(MessageReceivedAsync);
         }
 

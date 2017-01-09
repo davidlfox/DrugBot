@@ -35,7 +35,7 @@ namespace DrugBot.Dialogs
             var user = this.GetUser(context);
             if (user.DayOfGame == Defaults.GameEndDay - 1)
             {
-                await context.PostAsync("WARNING: This is the last day. You should offload your stash now. Your score is based on what's in your wallet--not inventory!");
+                await context.PostAsync(Defaults.GameEndWarningText);
             }
 
             context.Wait(MessageReceivedAsync);
