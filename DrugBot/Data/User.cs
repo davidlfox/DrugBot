@@ -68,5 +68,12 @@ namespace DrugBot.Data
         /// Randomized loan rate
         /// </summary>
         public double LoanRate { get; set; }
+
+        /// <summary>
+        /// Navigation property for the user's weapon
+        /// </summary>
+        [ForeignKey("Gun")]
+        public int? GunId { get; set; }
+        public virtual Gun Gun { get; set; }
     }
 }

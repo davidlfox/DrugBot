@@ -21,12 +21,12 @@ namespace DrugBot.Common
             }
         }
 
-        public static string Get(IDialogContext context, int userId)
+        public static EventInfo Get(IDialogContext context, int userId)
         {
             var eventText = string.Empty;
 
             // random weighted event
-            var eventOdd = rand.Next(1, 5);
+            var eventOdd = rand.Next(1, 6);
 
             System.Diagnostics.Debug.WriteLine($"eventOdd: {eventOdd}");
 
@@ -43,7 +43,6 @@ namespace DrugBot.Common
                 // event: police raid
                 case 2:
                     eventText = DoDrugSpike(userId, db, context);
-                    
                     break;
                 // event: drug spike down
                 case 3:
@@ -53,9 +52,13 @@ namespace DrugBot.Common
                 case 4:
                     eventText = DoTrenchcoat(userId, db);
                     break;
+                // event: option to buy a gun, handled later
+                case 5:
+                    return new EventInfo { IsGunEvent = true };
+                    break;
             }
 
-            return eventText;
+            return new EventInfo { EventText = eventText };
         }
 
         private static string DoMugging(int userId, DrugBotDataContext db)
@@ -138,6 +141,11 @@ namespace DrugBot.Common
 
             var trenchcoatText = RandomTrenchcoatText();
             return $"{trenchcoatText} You can hold {newSpace} more drugs!";
+        }
+
+        public static int GetRandomNumberBetween(int min, int max)
+        {
+            return rand.Next(min, max);
         }
 
         public static double GetRandomDoubleBetween(double min, double max)

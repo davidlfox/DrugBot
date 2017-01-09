@@ -128,7 +128,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Common\BuyGunInfo.cs" />
     <Compile Include="Common\Defaults.cs" />
+    <Compile Include="Common\EventInfo.cs" />
     <Compile Include="Common\GameState.cs" />
     <Compile Include="Common\RandomEvent.cs" />
     <Compile Include="Common\StateKeys.cs" />
@@ -137,6 +139,7 @@
     <Compile Include="Data\Drug.cs" />
     <Compile Include="Data\DrugBotDataContext.cs" />
     <Compile Include="Data\Game.cs" />
+    <Compile Include="Data\Gun.cs" />
     <Compile Include="Data\InventoryItem.cs" />
     <Compile Include="Data\Location.cs" />
     <Compile Include="Data\User.cs" />
@@ -147,6 +150,7 @@
     <Compile Include="Dialogs\SellDialog.cs" />
     <Compile Include="Dialogs\SetupNameDialog.cs" />
     <Compile Include="Dialogs\LoanDialog.cs" />
+    <Compile Include="Dialogs\BuyGunDialog.cs" />
     <Compile Include="Dialogs\TravelDialog.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -195,6 +199,10 @@
     <Compile Include="Migrations\201701072215283_add-user-loan-stuff.Designer.cs">
       <DependentUpon>201701072215283_add-user-loan-stuff.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701090651167_add-guns.cs" />
+    <Compile Include="Migrations\201701090651167_add-guns.Designer.cs">
+      <DependentUpon>201701090651167_add-guns.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -240,6 +248,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701072215283_add-user-loan-stuff.resx">
       <DependentUpon>201701072215283_add-user-loan-stuff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701090651167_add-guns.resx">
+      <DependentUpon>201701090651167_add-guns.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -47,20 +47,31 @@ namespace DrugBot.Dialogs
             await context.PostAsync(activity);
 
             // check for random event text
-            var eventText = string.Empty;
-            if (context.UserData.TryGetValue(StateKeys.RandomEventText, out eventText))
+            EventInfo randomEvent;
+            if (context.UserData.TryGetValue(StateKeys.RandomEvent, out randomEvent))
             {
-                await context.PostAsync(eventText);
-                context.UserData.RemoveValue(StateKeys.RandomEventText);
-            }
+                if (randomEvent.IsGunEvent)
+                {
+                    context.Call(new BuyGunDialog(), ResumeMainMenu);
+                }
+                else
+                {
+                    await context.PostAsync(randomEvent.EventText);
+                    context.Wait(MessageReceivedAsync);
+                }
 
-            // get day of game
-            if (user.DayOfGame == Defaults.GameEndDay - 1)
+                context.UserData.RemoveValue(StateKeys.RandomEvent);
+            }
+            else
             {
-                await context.PostAsync(Defaults.GameEndWarningText);
-            }
+                // get day of game
+                if (user.DayOfGame == Defaults.GameEndDay - 1)
+                {
+                    await context.PostAsync(Defaults.GameEndWarningText);
+                }
 
-            context.Wait(MessageReceivedAsync);
+                context.Wait(MessageReceivedAsync);
+            }
         }
 
         public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
@@ -140,9 +151,9 @@ namespace DrugBot.Dialogs
                 // todo: random events for the day
                 if (RandomEvent.IsGoingToHappen)
                 {
-                    // pass context and user to do db things, receive string
-                    var eventText = RandomEvent.Get(context, user.UserId);
-                    context.UserData.SetValue(StateKeys.RandomEventText, eventText);
+                    // pass context and user to do db things, receive event info
+                    var randomEvent = RandomEvent.Get(context, user.UserId);
+                    context.UserData.SetValue(StateKeys.RandomEvent, randomEvent);
                 }
 
                 // get day and location

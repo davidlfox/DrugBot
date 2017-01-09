@@ -140,6 +140,7 @@ namespace DrugBot.Dialogs
             user.LocationId = Defaults.LocationId;
             user.LoanDebt = 0;
             user.LoanRate = 0.0;
+            user.GunId = null;
 
             // clear out inventory
             db.InventoryItems.RemoveRange(user.Inventory);
@@ -184,15 +185,20 @@ namespace DrugBot.Dialogs
 
             var sb = new StringBuilder($"Inventory: ({usedSpace}/{user.InventorySize})\n\n");
 
-            if(user.Inventory.Any(x => x.Quantity > 0))
+            if (user.Inventory.Any(x => x.Quantity > 0) || user.GunId.HasValue)
             {
                 foreach (var inventory in user.Inventory)
                 {
                     // could have quantity: 0 in some cases, dont bother displaying
-                    if(inventory.Quantity > 0)
+                    if (inventory.Quantity > 0)
                     {
                         sb.Append($"{inventory.Drug.Name}: {inventory.Quantity}\n\n");
                     }
+                }
+
+                if (user.GunId.HasValue)
+                {
+                    sb.Append($"{user.Gun.Name} ({user.Gun.Damage} damage)\n\n");
                 }
             }
             else
@@ -268,6 +274,32 @@ namespace DrugBot.Dialogs
             }
 
             return false;
+        }
+
+        protected Gun GetRandomGun(int dayOfGame)
+        {
+            var db = new DrugBotDataContext();
+            var guns = db.Guns.Where(x => x.MinimumDayOfGame <= dayOfGame).ToList();
+            return guns.ElementAt(RandomEvent.GetRandomNumberBetween(0, guns.Count));
+        }
+
+        protected BuyGunInfo BuyGun(IDialogContext context)
+        {
+            var db = new DrugBotDataContext();
+            var gun = context.UserData.Get<Gun>(StateKeys.GunToBuy);
+            var userId = context.UserData.Get<int>(StateKeys.UserId);
+            var user = db.Users.FirstOrDefault(x => x.UserId == userId);
+
+            if (user.Wallet >= gun.Cost)
+            {
+                user.Wallet = user.Wallet - gun.Cost;
+                user.GunId = gun.GunId;
+                db.Commit();
+
+                return new BuyGunInfo { IsSuccessful = true };
+            }
+
+            return new BuyGunInfo { IsSuccessful = false, ReasonText = "You ain't got the cash for this piece." };
         }
 
         protected void AddCancelButton(ICollection<CardAction> buttons)

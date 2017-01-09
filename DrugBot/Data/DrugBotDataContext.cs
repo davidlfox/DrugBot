@@ -18,6 +18,7 @@ namespace DrugBot.Data
         public DbSet<Location> Locations { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
         public DbSet<Game> Games { get; set; }
+        public DbSet<Gun> Guns { get; set; }
 
         public DrugBotDataContext()
         {

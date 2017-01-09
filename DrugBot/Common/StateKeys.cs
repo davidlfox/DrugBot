@@ -13,6 +13,7 @@ namespace DrugBot.Common
         public readonly static string DrugToBuy = "drugToBuy";
         public readonly static string DrugToSell = "drugToSell";
         public readonly static string LoanRate = "loanRate";
-        public readonly static string RandomEventText = "randomEventText";
+        public readonly static string RandomEvent = "randomEvent";
+        public readonly static string GunToBuy = "gunToBuy";
     }
 }
