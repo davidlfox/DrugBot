@@ -56,7 +56,7 @@ namespace DrugBot.Dialogs
             else
             {
                 // tell them to trigger the game start
-                await context.PostAsync("You should probably type \"PLAY\" to start the game...");
+                await context.PostAsync("You should probably type PLAY to start the game...");
                 context.Wait(MessageReceivedAsync);
             }
         }

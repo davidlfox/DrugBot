@@ -29,7 +29,6 @@ namespace DrugBot.Dialogs
                 // setup hero card
                 var buttons = this.CreateButtonMenu(new string[] { "Inventory", "Buy", "Sell", "Prices", "Travel", "Loan Shark" });
 
-
                 var location = this.GetLocation(context);
                 IMessageActivity activity = this.SetupActivity(context, buttons, 
                     $"You have {user.Wallet:C0}. You're in {location.Name}. What do you want to do?");
