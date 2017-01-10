@@ -24,7 +24,7 @@ namespace DrugBot.Dialogs
 
             var user = this.GetUser(context);
 
-            if (randomEvent == null || (!randomEvent.IsGunEvent && randomEvent.IsCombatEvent))
+            if (randomEvent == null || (!randomEvent.IsGunEvent && !randomEvent.IsCombatEvent))
             {
                 // setup hero card
                 var buttons = this.CreateButtonMenu(new string[] { "Inventory", "Buy", "Sell", "Prices", "Travel", "Loan Shark" });
