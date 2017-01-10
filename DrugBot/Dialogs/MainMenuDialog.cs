@@ -137,6 +137,8 @@ namespace DrugBot.Dialogs
                 await context.PostAsync($"You finished with {score:C0}.");
                 await this.ShowLeaderboard(context);
 
+                await context.PostAsync("Type PLAY to start another game!");
+
                 // reset user (this commits db changes)
                 this.ResetUser(context);
 
