@@ -141,6 +141,7 @@ namespace DrugBot.Dialogs
             user.LoanDebt = 0;
             user.LoanRate = 0.0;
             user.GunId = null;
+            user.InventorySize = Defaults.InventorySize;
 
             // clear out inventory
             db.InventoryItems.RemoveRange(user.Inventory);
