@@ -48,6 +48,11 @@ namespace DrugBot.Dialogs
                     context.Call(new MainMenuDialog(), BackToSetupNameAsync);
                 }
             }
+            else if (message.Text.ToLower() == "leaderboard")
+            {
+                await this.ShowLeaderboard(context);
+                context.Wait(MessageReceivedAsync);
+            }
             else
             {
                 // tell them to trigger the game start
