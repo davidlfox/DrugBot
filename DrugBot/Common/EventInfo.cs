@@ -9,5 +9,6 @@ namespace DrugBot.Common
     {
         public string EventText { get; set; }
         public bool IsGunEvent { get; set; }
+        public bool IsCombatEvent { get; set; }
     }
 }

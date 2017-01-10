@@ -136,6 +136,7 @@
     <Compile Include="Common\StateKeys.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Data\Attributes\UniqueNameValidationAttribute.cs" />
+    <Compile Include="Data\CombatContext.cs" />
     <Compile Include="Data\Drug.cs" />
     <Compile Include="Data\DrugBotDataContext.cs" />
     <Compile Include="Data\Game.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Dialogs\SetupNameDialog.cs" />
     <Compile Include="Dialogs\LoanDialog.cs" />
     <Compile Include="Dialogs\BuyGunDialog.cs" />
+    <Compile Include="Dialogs\CombatDialog.cs" />
     <Compile Include="Dialogs\TravelDialog.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

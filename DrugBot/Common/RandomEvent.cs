@@ -26,7 +26,7 @@ namespace DrugBot.Common
             var eventText = string.Empty;
 
             // random weighted event
-            var eventOdd = rand.Next(1, 6);
+            var eventOdd = rand.Next(1, 7);
 
             System.Diagnostics.Debug.WriteLine($"eventOdd: {eventOdd}");
 
@@ -55,7 +55,9 @@ namespace DrugBot.Common
                 // event: option to buy a gun, handled later
                 case 5:
                     return new EventInfo { IsGunEvent = true };
-                    break;
+                // event: cops!
+                case 6:
+                    return new EventInfo { IsCombatEvent = true };
             }
 
             return new EventInfo { EventText = eventText };
@@ -69,7 +71,7 @@ namespace DrugBot.Common
             var wallet = user.Wallet;
 
             // todo: put bounds somewhere static or configurable
-            var lossRate = GetRandomDoubleBetween(0.10, 0.30);
+            var lossRate = GetRandomDoubleBetween(0.05, 0.10);
             var moneyLost = (int)(wallet * lossRate);
             var muggingText = RandomMuggingText();
 

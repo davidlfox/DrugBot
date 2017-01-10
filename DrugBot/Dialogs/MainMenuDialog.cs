@@ -19,40 +19,36 @@ namespace DrugBot.Dialogs
         /// </summary>
         public async Task StartAsync(IDialogContext context)
         {
-            // setup hero card
-            var buttons = new List<CardAction>();
-
-            foreach (var action in new string[] { "Inventory", "Buy", "Sell", "Prices", "Travel", "Loan Shark" })
-            {
-                buttons.Add(new CardAction { Title = action, Type = ActionTypes.ImBack, Value = action });
-            }
+            EventInfo randomEvent;
+            context.UserData.TryGetValue(StateKeys.RandomEvent, out randomEvent);
 
             var user = this.GetUser(context);
 
-            var location = this.GetLocation(context);
-
-            HeroCard heroCard = new HeroCard
+            if (randomEvent == null || (!randomEvent.IsGunEvent && randomEvent.IsCombatEvent))
             {
-                Buttons = buttons,
-                Text = $"You have {user.Wallet:C0}. You're in {location.Name}. What do you want to do?"
-            };
+                // setup hero card
+                var buttons = this.CreateButtonMenu(new string[] { "Inventory", "Buy", "Sell", "Prices", "Travel", "Loan Shark" });
 
-            var attachment = heroCard.ToAttachment();
 
-            // setup reply
-            var activity = context.MakeMessage();
-            activity.Attachments = new List<Attachment>();
-            activity.Attachments.Add(attachment);
+                var location = this.GetLocation(context);
+                IMessageActivity activity = this.SetupActivity(context, buttons, 
+                    $"You have {user.Wallet:C0}. You're in {location.Name}. What do you want to do?");
 
-            await context.PostAsync(activity);
+                await context.PostAsync(activity);
+            }
 
             // check for random event text
-            EventInfo randomEvent;
-            if (context.UserData.TryGetValue(StateKeys.RandomEvent, out randomEvent))
+            if (randomEvent != null)
             {
                 if (randomEvent.IsGunEvent)
                 {
                     context.Call(new BuyGunDialog(), ResumeMainMenu);
+                }
+                else if (randomEvent.IsCombatEvent)
+                {
+                    var combat = new CombatContext();
+                    context.UserData.SetValue(StateKeys.CombatContext, combat);
+                    context.Call(new CombatDialog(), ResumeMainMenu);
                 }
                 else
                 {
@@ -73,6 +69,8 @@ namespace DrugBot.Dialogs
                 context.Wait(MessageReceivedAsync);
             }
         }
+
+        
 
         public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {

@@ -302,6 +302,40 @@ namespace DrugBot.Dialogs
             return new BuyGunInfo { IsSuccessful = false, ReasonText = "You ain't got the cash for this piece." };
         }
 
+        protected CombatContext GetCombatContext(IDialogContext context)
+        {
+            return context.UserData.Get<CombatContext>(StateKeys.CombatContext);
+        }
+
+        protected IMessageActivity SetupActivity(IDialogContext context, List<CardAction> buttons, string menuText)
+        {
+            HeroCard heroCard = new HeroCard
+            {
+                Buttons = buttons,
+                Text = menuText,
+            };
+
+            var attachment = heroCard.ToAttachment();
+
+            // setup reply
+            var activity = context.MakeMessage();
+            activity.Attachments = new List<Attachment>();
+            activity.Attachments.Add(attachment);
+            return activity;
+        }
+
+        protected List<CardAction> CreateButtonMenu(IEnumerable<string> buttons)
+        {
+            var result = new List<CardAction>();
+
+            foreach (var action in buttons)
+            {
+                result.Add(new CardAction { Title = action, Type = ActionTypes.ImBack, Value = action });
+            }
+
+            return result;
+        }
+
         protected void AddCancelButton(ICollection<CardAction> buttons)
         {
             buttons.Add(new CardAction
