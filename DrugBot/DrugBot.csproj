@@ -134,6 +134,7 @@
     <Compile Include="Common\GameState.cs" />
     <Compile Include="Common\RandomEvent.cs" />
     <Compile Include="Common\StateKeys.cs" />
+    <Compile Include="Common\StringHelper.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Data\Attributes\UniqueNameValidationAttribute.cs" />
     <Compile Include="Data\CombatContext.cs" />

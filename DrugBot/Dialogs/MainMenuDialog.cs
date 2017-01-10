@@ -130,11 +130,21 @@ namespace DrugBot.Dialogs
 
                 // record log of game before resetting
                 var db = new DrugBotDataContext();
-                db.AddGame(user.UserId, score);
+
+                var game = new Game { UserId = user.UserId, Score = score };
+                db.Games.Add(game);
                 db.Commit();
 
+                // get their rank
+                var orderedGame = db.Games
+                    .OrderByDescending(x => x.Score)
+                    .AsEnumerable()
+                    .Select((x, i) => new { Game = x, Rank = i + 1 })
+                    .Single(x => x.Game.GameId == game.GameId);
+
                 await context.PostAsync("Game Over.");
-                await context.PostAsync($"You finished with {score:C0}.");
+                await context.PostAsync($"You finished with {score:C0} " +
+                    $"({StringHelper.AddOrdinal(orderedGame.Rank)} overall)");
                 await this.ShowLeaderboard(context);
 
                 await context.PostAsync("Type PLAY to start another game!");
