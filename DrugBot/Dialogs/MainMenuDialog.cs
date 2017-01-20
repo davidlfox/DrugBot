@@ -23,18 +23,15 @@ namespace DrugBot.Dialogs
             context.UserData.TryGetValue(StateKeys.RandomEvent, out randomEvent);
 
             var user = this.GetUser(context);
+            
+            // setup hero card
+            var buttons = this.CreateButtonMenu(new string[] { "Inventory", "Buy", "Sell", "Prices", "Travel", "Loan Shark" });
 
-            if (randomEvent == null || (!randomEvent.IsGunEvent && !randomEvent.IsCombatEvent))
-            {
-                // setup hero card
-                var buttons = this.CreateButtonMenu(new string[] { "Inventory", "Buy", "Sell", "Prices", "Travel", "Loan Shark" });
+            var location = this.GetLocation(context);
+            IMessageActivity activity = this.SetupActivity(context, buttons, 
+                $"You have {user.Wallet:C0}. You're in {location.Name}. What do you want to do?");
 
-                var location = this.GetLocation(context);
-                IMessageActivity activity = this.SetupActivity(context, buttons, 
-                    $"You have {user.Wallet:C0}. You're in {location.Name}. What do you want to do?");
-
-                await context.PostAsync(activity);
-            }
+            await context.PostAsync(activity);
 
             // check for random event text
             if (randomEvent != null)
