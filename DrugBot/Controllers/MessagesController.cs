@@ -9,6 +9,8 @@ using Microsoft.Bot.Connector;
 using Newtonsoft.Json;
 using Microsoft.Bot.Builder.Dialogs;
 using DrugBot.Dialogs;
+using Microsoft.ApplicationInsights;
+using System.Collections.Generic;
 
 namespace DrugBot
 {
@@ -21,16 +23,29 @@ namespace DrugBot
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
-            if (activity.Type == ActivityTypes.Message)
+            try
             {
-                await Conversation.SendAsync(activity, () => new GameDialog());
+                if (activity.Type == ActivityTypes.Message)
+                {
+                    await Conversation.SendAsync(activity, () => new GameDialog());
+                }
+                else
+                {
+                    HandleSystemMessage(activity);
+                }
+                var response = Request.CreateResponse(HttpStatusCode.OK);
+                return response;
             }
-            else
+            catch (Exception ex)
             {
-                HandleSystemMessage(activity);
+                var ai = new TelemetryClient();
+                var props = new Dictionary<string, string>();
+                props.Add("messagetext", activity.Text);
+                ai.TrackException(ex, props);
+
+                var response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return response;
             }
-            var response = Request.CreateResponse(HttpStatusCode.OK);
-            return response;
         }
 
         private Activity HandleSystemMessage(Activity message)
